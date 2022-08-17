@@ -5,13 +5,18 @@ class Neo:
     def __init__(self):
         self.driver = GraphDatabase.driver(uri=f"neo4j://{dbaddr}:{dbport}", auth=(dbid, dbpw))
     
-    def run_query(self, q):
-        with self.driver.session() as session: 
-            results = session.run(q, parameters={})
-        return results
+    def __del__(self):
+        self.driver.close()    
 
-a = Neo()
-q = "match (n : Video) return (n)"
-b = a.run_query(q)
-for i, each in enumerate(b):
-    print(each)
+    def getVideos(self, tx):
+        rets = []
+        result = tx.run("match (n : Video) return (n)")
+        for record in result:
+            rets.append(record[0]["data"])
+        return rets
+
+    def runQuery(self, q):
+        with self.driver.session() as session:
+            if q == 0:
+                rets = session.read_transaction(self.getVideos)
+        return rets
