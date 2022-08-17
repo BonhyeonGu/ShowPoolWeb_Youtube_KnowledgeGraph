@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request, jsonify
 import queue
 #--------------------------------------------------------------------------------------
-from secret import dbid, dbpw, dbaddr, dbport
+
 #--------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------
@@ -24,6 +24,9 @@ def sameCount(a:list, b:list):
 	return ret
 #--------------------------------------------------------------------------------------
 @app.route("/")
+def root():
+	return render_template('index.html')
+@app.route("/index")
 def index():
 	return render_template('index.html')
 @app.route("/result", methods=['POST'])
