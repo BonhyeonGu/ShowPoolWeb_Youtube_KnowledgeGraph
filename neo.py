@@ -15,8 +15,26 @@ class Neo:
             rets.append(record[0]["data"])
         return rets
 
-    def runQuery(self, q):
+    def getVideo_Seg_KCS(self, tx, videoId, segNum):
+        rets = []
+        result = tx.run("match (n : Video) return (n)")
+        for record in result:
+            rets.append(record[0]["data"])
+        return rets
+
+    def getKC_Videos(self, tx, KC):
+        rets = []
+        result = tx.run("match (n : Video) return (n)")
+        for record in result:
+            rets.append(record[0]["data"])
+        return rets
+
+    def runQuery(self, q, arg1, arg2):
         with self.driver.session() as session:
             if q == 0:
                 rets = session.read_transaction(self.getVideos)
+            if q == 1:
+                rets = session.read_transaction(self.getVideo_Seg_KCS, arg1, arg2)
+            if q == 2:
+                rets = session.read_transaction(self.getKC_Videos, arg1)
         return rets

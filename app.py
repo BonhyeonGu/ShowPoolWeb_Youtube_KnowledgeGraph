@@ -23,12 +23,23 @@ def index():
 @app.route("/getVideos", methods=['POST'])
 def getVideos():
 	global neo
-	j = {"vedioIds" : nowStatusStr+"<p style=\"text-align: center;\">%d SEC</p>"%(nowStatusSec)}
+	ret = neo.runQuery(0)
+	j = {"vedioIds" : ret}
 	return jsonify(j)
 
-@app.route("/getVideos", methods=['POST'])
-def getVideos():
+@app.route("/getVideoSegKCS", methods=['POST'])
+def getVideoSegKCS():
 	global neo
+	params = request.get_json()
+	neo.runQuery(1, params['videoId'], params['segNum'])
+	j = {"vedioIds" : nowStatusStr}
+	return jsonify(j)
+
+@app.route("/getKC_Videos", methods=['POST'])
+def getKC_Videos():
+	global neo
+	params = request.get_json()
+	neo.runQuery(2, params['kc'])
 	j = {"vedioIds" : nowStatusStr+"<p style=\"text-align: center;\">%d SEC</p>"%(nowStatusSec)}
 	return jsonify(j)
 
