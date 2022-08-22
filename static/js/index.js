@@ -1,5 +1,15 @@
 $(document).ready(function(){
     $("#windowVedio").hide()
+    $.ajax({
+        url: "/getVideos",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        success: function(res){
+            $("#listVedio").text(res.s[0]);
+        }
+    });
+
 
     $("#btnInp").on("click", function(){
         let url = $("#url").val().split("v=")[1]

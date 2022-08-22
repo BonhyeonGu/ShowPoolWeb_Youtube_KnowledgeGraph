@@ -50,15 +50,8 @@ def getKC_Videos():
 def result():
 	inputValues = [tokenSum, splitSec, queueSize, keywordSize, forward_sec, hit, sameCountSum, tripleBool]
 	return render_template('result.html', ret1=ret1, ret2=ret2, ret3=ret3, iv = inputValues, url="http://www.youtube.com/embed/" + ytid + "?enablejsapi=1&origin=http://example.com")
-#--------------------------------------------------------------------------------------
 
-@app.route("/statusJsonOutput", methods=['POST'])
-def statusJsonOutput():
-	global nowStatusStr
-	global nowStatusSec
-	nowStatusSec += 1
-	test_data = {"s" : nowStatusStr+"<p style=\"text-align: center;\">%d SEC</p>"%(nowStatusSec)}
-	return jsonify(test_data)
+#--------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
 		app.debug = True
