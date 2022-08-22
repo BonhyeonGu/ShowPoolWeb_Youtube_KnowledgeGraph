@@ -53,29 +53,37 @@
         }
 
     </style>
-	<script src="{{ url_for('static', filename='js/test.js') }}"></script>
+	<script>
+		$(document).ready(function()
+		{
+			$("#btnInp").on("click", function()
+			{
+				let url = $("#url").val().split("v=")[1]
+				if(url.includes("&")) 
+				{
+					url = url.split("&")[0];
+				}
+				src = "http://www.youtube.com/embed/" + url + "?enablejsapi=1&origin=http://example.com";
+				$("#player").attr("src", src);
+				setInterval(function()
+				{
+					$.ajax({
+						url: "/statusJsonOutput",
+						type: "POST",
+						dataType: "json",
+						contentType: "application/json",
+						success: function(resultData){
+							$("#status").html(resultData.s);
+						}
+					});    
+				}, 1000);
+			});
+		});
+	</script>
 </head>
 
 <body>
-    <div id="title">
-
-    </div>
-    <div id="main">
-        <div id="console">
-
-        </div>
-        <div id="listVedio">
-            <button id="btnStart">Go</button>
-        </div>
-    </div>
-    <div id="windowVedio">
-        <button id="btnClose">Close</button><br />
-        <iframe width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-	</div>
-
-
-
-    <div id = "title">ISWC2022 Poster: Towards stream reasoning of knowledge components for online video learning</div>
+	<div id = "title">ISWC2022 Poster: Towards stream reasoning of knowledge components for online video learning</div>
     <div id = "aff">Department of Computer Science and Artficial Intelligence, Dong-A University, &nbsp;&nbsp;&nbsp;&nbsp; Sungbeom Lee and Sejin Chun</div>
 	<div id = "top">
 		<form action="/result" method="post" id="inp">

@@ -6,100 +6,26 @@
 	<script src ="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src ="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 	<style>
-		#top
-        {
-            background-color: rgb(11, 0, 26);
-			text-align: center;
-			color: rgb(255, 255, 255);
-        }
-		#title
-        {
-            background-color: rgb(210, 246, 255);
-			text-align: center;
-			font-size:2.0em;
-        }
-		#aff
-        {
-            background-color: rgb(240, 240, 240);
-			text-align: center;
-			font-size:1.4em;
-        }
-		#input_link
-        {
-			text-align: center;
-			font-size:1.5em;
-        }
-		.input_etc
-        {
-			text-align: center;
-			font-size:1.4em;
-        }
-
-		#aff
-        {
-            background-color: rgb(240, 240, 240);
-			text-align: center;
-			font-size:1.4em;
-        }
-		#status
-        {
-            background-color: rgb(11, 0, 26);
-			font-size:0.8em;
-			color: rgb(255, 255, 255);
-        }
-		#player
-        {
-            text-align: center;
-        }
-
+		
     </style>
-	<script>
-		$(document).ready(function()
-		{
-			$("#btnInp").on("click", function()
-			{
-				let url = $("#url").val().split("v=")[1]
-				if(url.includes("&")) 
-				{
-					url = url.split("&")[0];
-				}
-				src = "http://www.youtube.com/embed/" + url + "?enablejsapi=1&origin=http://example.com";
-				$("#player").attr("src", src);
-				setInterval(function()
-				{
-					$.ajax({
-						url: "/statusJsonOutput",
-						type: "POST",
-						dataType: "json",
-						contentType: "application/json",
-						success: function(resultData){
-							$("#status").html(resultData.s);
-						}
-					});    
-				}, 1000);
-			});
-		});
-	</script>
+	<script src="{{ url_for('static', filename='js/test.js') }}"></script>
 </head>
 
 <body>
-	<div id = "title">ISWC2022 Poster: Towards stream reasoning of knowledge components for online video learning</div>
-    <div id = "aff">Department of Computer Science and Artficial Intelligence, Dong-A University, &nbsp;&nbsp;&nbsp;&nbsp; Sungbeom Lee and Sejin Chun</div>
-	<div id = "top">
-		<form action="/result" method="post" id="inp">
-			<br /><div id = "input_link">Copy and paste a YouTube link for online lecture</div><br />
-			<input type="text" id="url" name="url" value="https://www.youtube.com/watch?v=rhgUDGtT2EM" style="width:600px;height:30px;font-size:20px;text-align:center;">
-            <br /><br />
-            <div>
-                <span class = "input_etc">Enter the time interval per segment (unit: second)&nbsp;&nbsp;<input type="text" name="sec" value="300.0" style="width:80px;height:25px;font-size:20px;text-align:center;"></span><br /><br />
-                <span class = "input_etc">Enter the number of knowledge component to be extracted(unit: number)&nbsp;&nbsp;<input type="text" name="keywordSize" value="5" style="width:80px;height:25px;font-size:20px;text-align:center;"></span><br /><br />
-                <span class = "input_etc">Hit(ON/OFF) <input type="radio" name="hit" value="on"><input type="radio" name="hit" value="off" checked="checked"></span>&nbsp;&nbsp;&nbsp;
-                <span class = "input_etc">Output mode(Triple/Tuple) <input type="radio" name="triple" value="on" checked="checked"><input type="radio" name="triple" value="off"></span><br />
-            </div>
-			<br /><button id="btnInp" style="width:200px;height:50px;font-size:30px;">Generate</button><br><br>
-			<iframe id="player" type="text/html" width="640" height="360" src="" frameborder="0"></iframe>
-		</form>
+    <div id="title">
+
+    </div>
+    <div id="main">
+        <div id="console">
+
+        </div>
+        <div id="listVedio">
+            <button id="btnStart">Go</button>
+        </div>
+    </div>
+    <div id="windowVedio">
+        <button id="btnClose">Close</button><br />
+        <iframe width="560" height="315" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 	</div>
-	<div id = "status"></div>
 </body>
 </html>
