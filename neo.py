@@ -16,14 +16,17 @@ class Neo:
             rets.append(record[0]["data"])
         return rets
 
-    #원하는 비디오, 세그먼트의 컴포넌트들 조회
+    #원하는 비디오, 세그먼트의 컴포넌트들 조회 in=>brU5yLm9DZM ret=>
+    #[('2', 'Tangent'), ('2', 'Intelligence_quotient'), ('2', 'Laser'),
+    # ('2', 'Momentum'), ('2', 'Computer_scientist'), ('1', 'Friction'), ('1', 'Kinetic_energy'), ('1', 'Optics'), ('1', 'Beam_(nautical)'), ('1', 'Sine_and_cosine'), ('0', 'Geometry'), ('0', 'Croquet'), ('0', 'Kaleidoscope'), ('0', 'Optics'), ('0', 'Beam_(nautical)')]
     def getVideo_Seg_KCS(self, tx, yid):
         result = tx.run("MATCH (c: KnowledgeComponent) --> (s: Segment) --> (v: Video {data: $yid}) RETURN c, s",
         yid=yid
         )
         return [(row["s"]["data"], row["c"]["data"])for row in result]
 
-    #해당 컴포넌트가 포함되어있는 비디오 조회
+    #해당 컴포넌트가 포함되어있는 비디오 조회 in=>Tangent, ret=>
+    #[('jsYwFizhncE', '1'), ('brU5yLm9DZM', '2'), ('jsYwFizhncE', '2'), ('d-o3eB9sfls', '1')]
     def getKC_Videos(self, tx, kc):
         result = tx.run("MATCH (c: KnowledgeComponent {data: $kc}) --> (s: Segment) --> (v: Video) RETURN s, v",
         kc=kc
@@ -42,5 +45,5 @@ class Neo:
         return rets
 
 N = Neo()
-a1 = N.runQuery(1, "brU5yLm9DZM")
+a1 = N.runQuery(2, "Tangent")
 print(a1)
