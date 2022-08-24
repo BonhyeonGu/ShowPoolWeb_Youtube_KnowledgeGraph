@@ -1,6 +1,19 @@
+function makeBar(segComs){
+    segSize = segComs.length;
+    console.log(segSize);
+}
+
+function makeVedioSet(vid, title){
+    let code = `<div><img id="${vid}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
+        '</img>'+
+        `<div class="thumTitle">${title}</div>` +
+        '</div>';
+        return code;
+}
+
 $(document).ready(function(){
     $("#windowVedio").hide()
-
+    //비디오 리스트 요청(내부)
     $.ajax({
         url: "/getVideos",
         type: "POST",
@@ -8,6 +21,7 @@ $(document).ready(function(){
         contentType: "application/json",
         success: function(res){
             for(let vid of res.vedioIds){
+                //비디오 타이틀 요청(외부)
                 $.ajax({
                     url: "https://noembed.com/embed?url=https://www.youtube.com/watch?v=" + vid,
                     type: "GET",
@@ -15,11 +29,20 @@ $(document).ready(function(){
                     contentType: "application/json",
                     success: function(res){
                         let title = res.title;
-                        let code = `<div><img id="${vid}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
-                            '</img>'+
-                            `<div class="thumTitle">${title}</div>` +
-                            '</div>';
-                            $("#listVedio").append(code);
+                        //컴포넌트 리스트 요청(내부)
+                        $.ajax({
+                            url: "/getVideoSegKCS",
+                            type: "POST",
+                            dataType: "json",
+                            data: JSON.stringify({vid: vid}),
+                            contentType: "application/json",
+                            success: function(res){
+                                let segComs = res.segComs;
+                                makeBar(segComs);
+                                let code = makeVedioSet(vid, title);
+                                $("#listVideo").append(code);
+                            }
+                        })
                     }
                 }); 
             }

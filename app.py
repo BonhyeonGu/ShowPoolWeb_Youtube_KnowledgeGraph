@@ -32,8 +32,8 @@ def getVideos():
 def getVideoSegKCS():
 	global neo
 	params = request.get_json()
-	neo.runQuery(1, params['videoId'], params['segNum'])
-	j = {"vedioIds" : nowStatusStr}
+	ret = neo.runQuery(1, params['vid'])
+	j = {"segComs" : ret}
 	return jsonify(j)
 
 @app.route("/getKC_Videos", methods=['POST'])
