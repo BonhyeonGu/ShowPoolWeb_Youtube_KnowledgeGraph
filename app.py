@@ -25,7 +25,7 @@ def index():
 def getVideos():
 	global neo
 	ret = neo.runQuery(0)
-	j = {"vedioIds" : ret}
+	j = {"videoIds" : ret}
 	return jsonify(j)
 
 @app.route("/getVideoSegKCS", methods=['POST'])
@@ -41,7 +41,7 @@ def getKC_Videos():
 	global neo
 	params = request.get_json()
 	neo.runQuery(2, params['kc'])
-	j = {"vedioIds" : nowStatusStr+"<p style=\"text-align: center;\">%d SEC</p>"%(nowStatusSec)}
+	j = {"videoIds" : nowStatusStr+"<p style=\"text-align: center;\">%d SEC</p>"%(nowStatusSec)}
 	return jsonify(j)
 
 #--------------------------------------------------------------------------------------

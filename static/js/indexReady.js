@@ -10,18 +10,18 @@ function titleDrop(title){
     return ret;
 }
 
-function makeVedioSet(vid, title){
+function makevideoSet(vid, title){
     let code = `<div class="thumSet" style="float: left; margin: 20px;">`+
-            `<img id="${vid}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
+            `<img data-vid="${vid}" data-title="${title}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
             '</img>'+
-            `<div class="thumTitle" style="text-align: center;">${title}</div>` +
+            `<div class="thumTitle" style="text-align: center;">${titleDrop(title)}</div>` +
             '</div>'+
         '<div style="width=200px; position: relative; float: left; background-color:green;"></div>';
         return code;
 }
 
 $(document).ready(function(){
-    $("#windowVedio").hide()
+    $("#windowVideo").hide()
     //비디오 리스트 요청(내부)
     $.ajax({
         url: "/getVideos",
@@ -30,7 +30,7 @@ $(document).ready(function(){
         dataType: "json",
         contentType: "application/json",
         success: function(res){
-            for(let vid of res.vedioIds){
+            for(let vid of res.videoIds){
                 //비디오 타이틀 요청(외부)
                 $.ajax({
                     url: "https://noembed.com/embed?url=https://www.youtube.com/watch?v=" + vid,
@@ -39,7 +39,7 @@ $(document).ready(function(){
                     dataType: "json",
                     contentType: "application/json",
                     success: function(res){
-                        let title = titleDrop(res.title);
+                        let title = res.title;
                         //컴포넌트 리스트 요청(내부)
                         $.ajax({
                             url: "/getVideoSegKCS",
@@ -51,7 +51,7 @@ $(document).ready(function(){
                             success: function(res){
                                 let segComs = res.segComs;
                                 makeBar(segComs);
-                                let code = makeVedioSet(vid, title);
+                                let code = makevideoSet(vid, title);
                                 $("#listVideo").append(code);
                             }
                         })
@@ -61,33 +61,21 @@ $(document).ready(function(){
         }
     }); 
 
-    $("#btnInp").on("click", function(){
-        let url = $("#url").val().split("v=")[1]
-        if(url.includes("&")){
-            url = url.split("&")[0];
-        }
-        src = "http://www.youtube.com/embed/" + url + "?enablejsapi=1&origin=http://example.com";
-        $("#player").attr("src", src);
-        setInterval(function(){
-            $.ajax({
-                url: "/statusJsonOutput",
-                type: "POST",
-                dataType: "json",
-                contentType: "application/json",
-                success: function(resultData){
-                    $("#status").html(resultData.s);
-                }
-            });    
-        }, 1000);
+    $(".thumImg").on("click", function(){
+        let yid = $(this).attr('data-vid');
+        let title = $(this).attr('data-title');
+        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
+        $("#windowVideo").children('iframe').attr("src", src);
+        $("#windowVideo").children('#videoTitle').text(title);
+        $("#windowVideo").show();
     });
 
     $("#btnClose").on("click", function(){
-        $("#windowVedio").hide()
+        let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
+            "&autoplay=1";
+        $("#windowVideo").children('iframe').attr("src", src);
+        $("#windowVideo").hide()
     });
-    $("#btnStart").on("click", function(){
-        let yid = "jsYwFizhncE"
-        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com";
-        $("#windowVedio").children('iframe').attr("src", src);
-        $("#windowVedio").show()
-    });
+
+    $("#loading").hide()
 });
