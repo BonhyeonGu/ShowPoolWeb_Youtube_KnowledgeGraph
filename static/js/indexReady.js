@@ -1,13 +1,22 @@
 function makeBar(segComs){
-    segSize = segComs.length;
-    console.log(segSize);
+    let segSize = segComs.length;
+}
+
+function titleDrop(title){
+    let sizeMax = 40, ret = title;
+    if(title.length > sizeMax){
+        ret = title.substr(0, sizeMax-3) + "...";
+    }
+    return ret;
 }
 
 function makeVedioSet(vid, title){
-    let code = `<div><img id="${vid}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
-        '</img>'+
-        `<div class="thumTitle">${title}</div>` +
-        '</div>';
+    let code = `<div class="thumSet" style="float: left; margin: 20px;">`+
+            `<img id="${vid}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
+            '</img>'+
+            `<div class="thumTitle" style="text-align: center;">${title}</div>` +
+            '</div>'+
+        '<div style="width=200px; position: relative; float: left; background-color:green;"></div>';
         return code;
 }
 
@@ -17,6 +26,7 @@ $(document).ready(function(){
     $.ajax({
         url: "/getVideos",
         type: "POST",
+        async: false,
         dataType: "json",
         contentType: "application/json",
         success: function(res){
@@ -25,14 +35,16 @@ $(document).ready(function(){
                 $.ajax({
                     url: "https://noembed.com/embed?url=https://www.youtube.com/watch?v=" + vid,
                     type: "GET",
+                    async: false,
                     dataType: "json",
                     contentType: "application/json",
                     success: function(res){
-                        let title = res.title;
+                        let title = titleDrop(res.title);
                         //컴포넌트 리스트 요청(내부)
                         $.ajax({
                             url: "/getVideoSegKCS",
                             type: "POST",
+                            async: false,
                             dataType: "json",
                             data: JSON.stringify({vid: vid}),
                             contentType: "application/json",

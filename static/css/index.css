@@ -1,0 +1,10 @@
+@charset "utf-8";
+#console {
+    position: fixed;
+}
+
+#listVideo {
+    position: relative;
+    left: 300px;
+    width: 80%;
+}
