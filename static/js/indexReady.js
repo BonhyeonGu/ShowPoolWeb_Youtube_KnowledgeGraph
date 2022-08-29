@@ -21,7 +21,8 @@ function makevideoSet(vid, title){
 }
 
 $(document).ready(function(){
-    $("#windowVideo").hide()
+    $("#windowVideo").hide();
+    $("#windowVideoBlock").hide();
     //비디오 리스트 요청(내부)
     $.ajax({
         url: "/getVideos",
@@ -67,6 +68,7 @@ $(document).ready(function(){
         let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
+        $("#windowVideoBlock").show();
         $("#windowVideo").show();
     });
 
@@ -75,6 +77,7 @@ $(document).ready(function(){
             "&autoplay=1";
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").hide()
+        $("#windowVideoBlock").hide()
     });
 
     $("#loading").hide()
