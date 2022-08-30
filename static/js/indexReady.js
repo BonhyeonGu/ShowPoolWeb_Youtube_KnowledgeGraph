@@ -1,5 +1,17 @@
 function makeBar(segComs){
-    let segSize = segComs.length;
+    let divWidthAll = 320 - 20;
+    let divHeight = 20;
+
+    let divWidth = (divWidthAll / segComs.length).toFixed(4);
+    let code = '<br /><div style="text-align: center;">';
+    for(let coms of segComs){   
+        code += `<div style="width:${divWidth}px; height:${divHeight}px;` +
+        'border:1px solid; display: inline-block;"' +
+        '></div>';
+        console.log(code);
+    }
+    code += '</div>'
+    return code;
 }
 
 function titleDrop(title){
@@ -10,13 +22,14 @@ function titleDrop(title){
     return ret;
 }
 
-function makevideoSet(vid, title){
+function makevideoSet(vid, title, segComs){
     let code = `<div class="thumSet" style="float: left; margin: 20px;">`+
             `<img data-vid="${vid}" data-title="${title}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
             '</img>'+
             `<div class="thumTitle" style="text-align: center;">${titleDrop(title)}</div>` +
+            makeBar(segComs) +
             '</div>'+
-        '<div style="width=200px; position: relative; float: left; background-color:green;"></div>';
+        '<div style="width:200px; position: relative; float: left;"></div>';
         return code;
 }
 
@@ -51,8 +64,7 @@ $(document).ready(function(){
                             contentType: "application/json",
                             success: function(res){
                                 let segComs = res.segComs;
-                                makeBar(segComs);
-                                let code = makevideoSet(vid, title);
+                                let code = makevideoSet(vid, title, segComs);
                                 $("#listVideo").append(code);
                             }
                         })
