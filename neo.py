@@ -56,6 +56,6 @@ class Neo:
                 rets = session.read_transaction(self.getKC_Videos, arg1)
         return rets
 
-N = Neo()
-a1 = N.runQuery(1, "d-o3eB9sfls")
-print(a1)
+#N = Neo()
+#a1 = N.runQuery(1, "d-o3eB9sfls")
+#print(a1)
