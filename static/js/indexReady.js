@@ -1,41 +1,22 @@
-function standby(){
+function id2title(vid){
+    let ret;
     $.ajax({
-        url: "/getVideos",
-        type: "POST",
+        url: "https://noembed.com/embed?url=https://www.youtube.com/watch?v=" + vid,
+        type: "GET",
         async: false,
         dataType: "json",
         contentType: "application/json",
         success: function(res){
-            for(let vid of res.videoIds){
-                //비디오 타이틀 요청(외부)
-                $.ajax({
-                    url: "https://noembed.com/embed?url=https://www.youtube.com/watch?v=" + vid,
-                    type: "GET",
-                    async: false,
-                    dataType: "json",
-                    contentType: "application/json",
-                    success: function(res){
-                        let title = res.title;
-                        //컴포넌트 리스트 요청(내부)
-                        $.ajax({
-                            url: "/getVideoSegKCS",
-                            type: "POST",
-                            async: false,
-                            dataType: "json",
-                            data: JSON.stringify({vid: vid}),
-                            contentType: "application/json",
-                            success: function(res){
-                                let segComs = res.segComs;
-                                let code = makevideoSet(vid, title, segComs);
-                                $("#listVideo").append(code);
-                            }
-                        })
-                    }
-                }); 
-            }
+            ret = res.title;
         }
-    }); 
+    });
+    return ret;
 }
+
+//-------------------------------------------------
+
+
+//-------------------------------------------------
 
 function makeBar(segComs){
     let divWidthAll = 320 - 20;
@@ -49,7 +30,7 @@ function makeBar(segComs){
         'border:1px solid; display: inline-block;" ' +
         `data-idx=${idx} ` +
         `data-c0=${coms[0]} data-c1=${coms[1]} data-c2=${coms[2]} ` +
-        `data-c3=${coms[3]} data-c4=${coms[4]}` +
+        `data-c3=${coms[3]} data-c4=${coms[4]} data-idx=${idx}` +
         '></div>';
         idx++;
     }
@@ -57,8 +38,8 @@ function makeBar(segComs){
     return code;
 }
 
-function titleDrop(title){
-    let sizeMax = 40, ret = title;
+function titleDrop(title, sizeMax){
+    let ret = title;
     if(title.length > sizeMax){
         ret = title.substr(0, sizeMax-3) + "...";
     }
@@ -69,38 +50,39 @@ function makevideoSet(vid, title, segComs){
     let code = `<div class="thumSet" style="float: left; margin: 20px;">`+
             `<img data-vid="${vid}" data-title="${title}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
             '</img>'+
-            `<div class="thumTitle" style="text-align: center;">${titleDrop(title)}</div>` +
+            `<div class="thumTitle" style="text-align: center;">${titleDrop(title, 40)}</div>` +
             makeBar(segComs) +
             '</div>'+
         '<div style="width:200px; position: relative; float: left;"></div>';
         return code;
 }
 
-function horverBar(){
-    $(".bar").on("mouseenter", function(){
-        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c1')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c2')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
-        $('#console').html(code)
+function standby(){
+    $.ajax({
+        url: "/getVideos",
+        type: "POST",
+        async: false,
+        dataType: "json",
+        contentType: "application/json",
+        success: function(res){
+            for(let vid of res.videoIds){
+                let title = id2title(vid);
+                $.ajax({
+                    url: "/getVideoSegKCS",
+                    type: "POST",
+                    async: false,
+                    dataType: "json",
+                    data: JSON.stringify({vid: vid}),
+                    contentType: "application/json",
+                    success: function(res){
+                        let segComs = res.segComs;
+                        let code = makevideoSet(vid, title, segComs);
+                        $("#listVideo").append(code);
+                    }
+                });
+            }
+        }
     });
-}
-
-function clickBar(){
-    $(".comp").on("click", function(){
-        let yid = $(this).data('vid');
-        let title = $(this).data('title');
-        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
-        $("#windowVideo").children('iframe').attr("src", src);
-        $("#windowVideo").children('#videoTitle').text(title);
-        $("#windowVideoBlock").show();
-        $("#windowVideo").show();
-    });
-}
-
-function clickComp(){
-    
 }
 
 function clickThum(){
@@ -115,6 +97,89 @@ function clickThum(){
     });
 }
 
+//-------------------------------------------------
+
+function horverBar(){
+    $(".bar").on("mouseenter", function(){
+        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c1')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c2')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
+        $('#console').html(code)
+        clickComp();
+    });
+}
+
+function clickBar(){
+    $(".bar").on("click", function(){
+        let time = Number($(this).data('idx')) * 60 * 5;
+ 
+        let sel = $(this).parent().parent().children('img');
+        let yid = sel.data('vid');
+        let title = sel.data('title');
+
+        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1&start=" + time;
+        $("#windowVideo").children('iframe').attr("src", src);
+        $("#windowVideo").children('#videoTitle').text(title);
+        $("#windowVideoBlock").show();
+        $("#windowVideo").show();
+    });
+}
+
+function clickId4Comp(){
+    $(".id4comp").on("click", function(){
+        let time = Number($(this).data('idx')) * 60 * 5;
+        let yid = $(this).data('vid');
+        let title = $(this).data('title');
+
+        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1&start=" + time;
+        $("#windowVideo").children('iframe').attr("src", src);
+        $("#windowVideo").children('#videoTitle').text(title);
+        $("#windowVideoBlock").show();
+        $("#windowVideo").show();
+    });
+}
+
+function clickComp(){
+    $(".comp").on("click", function(){
+        let code = "";
+        let comp = $(this).text();
+        $(this).text("로딩중");
+        console.log();
+        $.ajax({
+            url: "/getKC_Videos",
+            type: "POST",
+            async: false,
+            dataType: "json",
+            data: JSON.stringify({comp: comp}),
+            contentType: "application/json",
+            success: function(res){
+                let videoId = res.videoIds;
+                for(let id of videoId){
+                    let title = titleDrop(id2title(id[0]), 20);
+                    code += `<div class="id4comp" data-vid=${id[0]} data-idx=${id[1]} data-title=${title}>${title}의 ${id[1]}번째</div> <br />`
+                }
+            }
+        });
+        $('#console').html(code);
+        clickId4Comp();
+    });
+}
+
+//-------------------------------------------------
+$(document).keydown(function(event){
+    $(document).keydown(function(event) {
+        if ( event.keyCode == 27 || event.which == 27 ) {
+            let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
+                "&autoplay=1";
+            $("#windowVideo").children('iframe').attr("src", src);
+            $("#windowVideo").hide()
+            $("#windowVideoBlock").hide()
+        }
+    });
+});
+
 $(document).ready(function(){
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();
@@ -122,6 +187,8 @@ $(document).ready(function(){
     standby();
     clickThum();
     horverBar();
+    clickBar();
+    //clickComp();
 
     $("#btnClose").on("click", function(){
         let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
@@ -131,6 +198,7 @@ $(document).ready(function(){
         $("#windowVideoBlock").hide()
     });
 
-    
+
+
     $("#loading").hide()
 });

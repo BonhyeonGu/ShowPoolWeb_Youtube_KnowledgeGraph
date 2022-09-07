@@ -40,16 +40,9 @@ def getVideoSegKCS():
 def getKC_Videos():
 	global neo
 	params = request.get_json()
-	neo.runQuery(2, params['kc'])
-	j = {"videoIds" : nowStatusStr+"<p style=\"text-align: center;\">%d SEC</p>"%(nowStatusSec)}
+	ret = neo.runQuery(2, params['comp'])
+	j = {"videoIds" : ret}
 	return jsonify(j)
-
-#--------------------------------------------------------------------------------------
-
-@app.route("/result", methods=['POST'])
-def result():
-	inputValues = [tokenSum, splitSec, queueSize, keywordSize, forward_sec, hit, sameCountSum, tripleBool]
-	return render_template('result.html', ret1=ret1, ret2=ret2, ret3=ret3, iv = inputValues, url="http://www.youtube.com/embed/" + ytid + "?enablejsapi=1&origin=http://example.com")
 
 #--------------------------------------------------------------------------------------
 
