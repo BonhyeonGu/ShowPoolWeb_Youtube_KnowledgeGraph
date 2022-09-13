@@ -132,7 +132,6 @@ function clickId4Comp(){
         let time = Number($(this).data('idx')) * 60 * 5;
         let yid = $(this).data('vid');
         let title = $(this).data('title');
-
         let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1&start=" + time;
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
@@ -146,7 +145,6 @@ function clickComp(){
         let code = "";
         let comp = $(this).text();
         $(this).text("로딩중");
-        console.log();
         $.ajax({
             url: "/getKC_Videos",
             type: "POST",
@@ -157,8 +155,8 @@ function clickComp(){
             success: function(res){
                 let videoId = res.videoIds;
                 for(let id of videoId){
-                    let title = titleDrop(id2title(id[0]), 20);
-                    code += `<div class="id4comp" data-vid=${id[0]} data-idx=${id[1]} data-title=${title}>${title}의 ${id[1]}번째</div> <br />`
+                    let title = id2title(id[0]);
+                    code += `<div class="id4comp" data-vid=${id[0]} data-idx=${id[1]} data-title='${title}'>${titleDrop(title, 20)}의 ${id[1]}번째</div> <br />`
                 }
             }
         });
