@@ -1,11 +1,17 @@
 //-------------------------------------------------
-
 let id2title = new Map();
 let id2autor = new Map();
 let id4compArrIdx;
 let id4compArrSize;
 let id4compArr;
+
+let history = new Array();
 //-------------------------------------------------
+function historyPop(){
+    if(history.length != 0){
+        $("#console").html(history.pop());
+    }
+}
 
 function id2info_push(vid){
     let ret;
@@ -110,7 +116,7 @@ function clickThum(){
 function clickBar(){
     $(".bar").on("click", function(){
         let time = Number($(this).data('idx')) * 60 * 5;
- 
+        
         let sel = $(this).parent().parent().children('img');
         let yid = sel.data('vid');
         let title = sel.data('title');
@@ -205,6 +211,7 @@ function clickComp(){
                     let tmp = `${id4compArr[0]}<div class="id4compMove"><span class="prev"> prev </span>` +
                     `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
                     $('#console').html(tmp);
+                    history.push(tmp);
                     clickId4compMove();
                 }
 
@@ -214,6 +221,7 @@ function clickComp(){
                         code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 20)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
                     }
                     $('#console').html(code);
+                    history.push(code);
                 }
             }
         });
@@ -228,8 +236,17 @@ function horverBar(){
         '<div class="comp">' + $(this).data('c2')+ '</div>' + '<br />' +
         '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
         '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
-        $('#console').html(code)
+        $('#console').html(code);
+        history.push(code);
         clickComp();
+    });
+}
+
+//-------------------------------------------------
+
+function clickBack(){
+    $("#consoleBack").on("click", function(){
+        historyPop();
     });
 }
 
@@ -248,6 +265,11 @@ $(document).keydown(function(event){
 });
 
 $(document).ready(function(){
+    id2title = new Map();
+    id2autor = new Map();
+    history = new Array();
+    history.push("NULL");
+
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();
     //비디오 리스트 요청(내부)
@@ -255,7 +277,8 @@ $(document).ready(function(){
     clickThum();
     horverBar();
     clickBar();
-    //clickComp();
+    
+    clickBack();
 
     $("#btnClose").on("click", function(){
         let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
