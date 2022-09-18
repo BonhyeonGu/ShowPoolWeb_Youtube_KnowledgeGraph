@@ -2,8 +2,9 @@
 
 let id2title = new Map();
 let id2autor = new Map();
-let id4compIdx;
-let id4compSize;
+let id4compArrIdx;
+let id4compArrSize;
+let id4compArr;
 //-------------------------------------------------
 
 function id2info_push(vid){
@@ -106,18 +107,6 @@ function clickThum(){
 
 //-------------------------------------------------
 
-function horverBar(){
-    $(".bar").on("mouseenter", function(){
-        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c1')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c2')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
-        $('#console').html(code)
-        clickComp();
-    });
-}
-
 function clickBar(){
     $(".bar").on("click", function(){
         let time = Number($(this).data('idx')) * 60 * 5;
@@ -148,15 +137,26 @@ function clickId4Comp(){
 }
 
 function clickId4compMove(){
-    $("#prev").on("click", function(){
-        if(id4compIdx > 1) id4compIdx--;
+    console.log(id4compArr);
+    console.log(id4compArrSize);
+    $(".prev").on("click", function(){
+        if(id4compArrIdx > 1){
+            id4compArrIdx--;
+            let tmp = `${id4compArr[id4compArrIdx - 1]}<div class="id4compMove"><span class="prev"> prev </span>` +
+                `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
+            $('#console').html(tmp);
+            clickId4compMove();
+        }
     });
-    $("#next").on("click", function(){
-        if(id4compIdx <= id4compSize) id4compIdx++;
+    $(".next").on("click", function(){
+        if(id4compArrIdx < id4compArrSize){
+            id4compArrIdx++;
+            let tmp = `${id4compArr[id4compArrIdx - 1]}<div class="id4compMove"><span class="prev"> prev </span>` +
+                `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
+            $('#console').html(tmp);
+            clickId4compMove();
+        }
     });
-    let tmp = `${codeArr[id4compIdx-1]}<div id="id4compMove"><span id="prev">prev</span>` +
-    `<span> ${id4compIdx} </span><span id="next">next</span></div>`;
-    $('#console').html(tmp);
 }
 
 function clickComp(){
@@ -185,27 +185,27 @@ function clickComp(){
                         else return -1;
                     }
                 });
-                let MAXIDX = 3;
+                let MAXIDX = 10;
                 //만약 해당 kc를 가진 영상이 너무 많으면
                 if(videoInfos.length > MAXIDX){
-                    codeArr = new Array();
+                    id4compArr = new Array();
                     let idx = 0;
-                    id4compSize = videoInfos.length;
+                    id4compArrSize = parseInt(videoInfos.length / MAXIDX);
                     for(let videoInfo of videoInfos){
                         code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 20)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
                         idx++;
                         if(idx == MAXIDX){
-                            codeArr.push(code);
+                            id4compArr.push(code);
                             code = "";
                             idx = 0;
                         }
                     }
-                    id4compIdx = 1;
-                    let tmp = `${codeArr[0]}<div id="id4compMove"><span id="prev">prev</span>` +
-                    `<span> ${id4compIdx} </span><span id="next">next</span></div>`;
+                    
+                    id4compArrIdx = 1;
+                    let tmp = `${id4compArr[0]}<div class="id4compMove"><span class="prev"> prev </span>` +
+                    `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
                     $('#console').html(tmp);
                     clickId4compMove();
-
                 }
 
                 //적다면
@@ -221,7 +221,20 @@ function clickComp(){
     });
 }
 
+function horverBar(){
+    $(".bar").on("mouseenter", function(){
+        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c1')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c2')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
+        '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
+        $('#console').html(code)
+        clickComp();
+    });
+}
+
 //-------------------------------------------------
+
 $(document).keydown(function(event){
     $(document).keydown(function(event) {
         if ( event.keyCode == 27 || event.which == 27 ) {

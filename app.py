@@ -42,7 +42,6 @@ def getKC_Videos():
 	params = request.get_json()
 	ret = neo.runQuery(2, params['comp'])
 	j = {"videoIds" : ret}
-	print(j)
 	return jsonify(j)
 
 #--------------------------------------------------------------------------------------
