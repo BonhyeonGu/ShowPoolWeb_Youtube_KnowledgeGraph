@@ -1,7 +1,24 @@
 @charset "utf-8";
+
+#consoleTitle {
+    top: 30px;
+    left: 10px;
+    position: fixed;
+    z-index: 8; 
+}
+
 #console {
+    top: 100px;
+    left: 10px;
     position: fixed;
     z-index: 8;
+}
+
+#consoleTitle {
+    top: 30px;
+    left: 10px;
+    position: fixed;
+    z-index: 8; 
 }
 
 #listVideo {
@@ -38,3 +55,23 @@
     z-index: 10;
     background-color:white;
 }
+
+.comp {
+    list-style-type: none;
+    margin: 0;
+    #overflow: hidden;
+    background-color: #333;
+    #display:inline-block;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 0px;
+    width: 240px;
+    text-decoration: none;
+    border-top: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+  }
+
+  .comp:hover {
+    background-color: #111;
+  }

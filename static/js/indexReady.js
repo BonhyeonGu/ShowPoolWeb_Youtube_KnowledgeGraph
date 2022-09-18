@@ -1,4 +1,12 @@
-function id2title(vid){
+//-------------------------------------------------
+
+let id2title = new Map();
+let id2autor = new Map();
+let id4compIdx;
+let id4compSize;
+//-------------------------------------------------
+
+function id2info_push(vid){
     let ret;
     $.ajax({
         url: "https://noembed.com/embed?url=https://www.youtube.com/watch?v=" + vid,
@@ -7,14 +15,13 @@ function id2title(vid){
         dataType: "json",
         contentType: "application/json",
         success: function(res){
-            ret = res.title;
+            ret = res;
         }
     });
-    return ret;
+    id2title.set(vid, ret.title);
+    id2autor.set(vid, ret.author_name);
+    return [ret.title, ret.author_name];
 }
-
-//-------------------------------------------------
-
 
 //-------------------------------------------------
 
@@ -66,7 +73,7 @@ function standby(){
         contentType: "application/json",
         success: function(res){
             for(let vid of res.videoIds){
-                let title = id2title(vid);
+                let [title, autor] = id2info_push(vid);
                 $.ajax({
                     url: "/getVideoSegKCS",
                     type: "POST",
@@ -140,6 +147,18 @@ function clickId4Comp(){
     });
 }
 
+function clickId4compMove(){
+    $("#prev").on("click", function(){
+        if(id4compIdx > 1) id4compIdx--;
+    });
+    $("#next").on("click", function(){
+        if(id4compIdx <= id4compSize) id4compIdx++;
+    });
+    let tmp = `${codeArr[id4compIdx-1]}<div id="id4compMove"><span id="prev">prev</span>` +
+    `<span> ${id4compIdx} </span><span id="next">next</span></div>`;
+    $('#console').html(tmp);
+}
+
 function clickComp(){
     $(".comp").on("click", function(){
         let code = "";
@@ -154,13 +173,50 @@ function clickComp(){
             contentType: "application/json",
             success: function(res){
                 let videoId = res.videoIds;
+                let videoInfos = new Array();
                 for(let id of videoId){
-                    let title = id2title(id[0]);
-                    code += `<div class="id4comp" data-vid=${id[0]} data-idx=${id[1]} data-title='${title}'>${titleDrop(title, 20)}의 ${id[1]}번째</div> <br />`
+                    videoInfos.push({title:id2title.get(id[0]), idx:id[1], id:id[0]});
+                }
+                videoInfos.sort(function(a, b){
+                    if(a.title < b.title) return 1;
+                    else if(a.title > b.title) return -1;
+                    else {
+                        if(a.idx > b.idx) return 1;
+                        else return -1;
+                    }
+                });
+                let MAXIDX = 3;
+                //만약 해당 kc를 가진 영상이 너무 많으면
+                if(videoInfos.length > MAXIDX){
+                    codeArr = new Array();
+                    let idx = 0;
+                    id4compSize = videoInfos.length;
+                    for(let videoInfo of videoInfos){
+                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 20)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
+                        idx++;
+                        if(idx == MAXIDX){
+                            codeArr.push(code);
+                            code = "";
+                            idx = 0;
+                        }
+                    }
+                    id4compIdx = 1;
+                    let tmp = `${codeArr[0]}<div id="id4compMove"><span id="prev">prev</span>` +
+                    `<span> ${id4compIdx} </span><span id="next">next</span></div>`;
+                    $('#console').html(tmp);
+                    clickId4compMove();
+
+                }
+
+                //적다면
+                else{
+                    for(let videoInfo of videoInfos){
+                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 20)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
+                    }
+                    $('#console').html(code);
                 }
             }
         });
-        $('#console').html(code);
         clickId4Comp();
     });
 }
