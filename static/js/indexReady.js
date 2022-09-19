@@ -16,7 +16,7 @@ function historyPop(){
         $("#console").html(history.pop());
     }
     else{
-        $("#console").html(NULL);
+        $("#console").html("NULL");
     }
 }
 
