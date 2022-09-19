@@ -6,10 +6,17 @@ let id4compArrSize;
 let id4compArr;
 
 let history = new Array();
+let lastHoverIdx;
+let lastHoverVid;
+
 //-------------------------------------------------
 function historyPop(){
+    console.log(history);
     if(history.length != 0){
         $("#console").html(history.pop());
+    }
+    else{
+        $("#console").html(NULL);
     }
 }
 
@@ -32,7 +39,7 @@ function id2info_push(vid){
 
 //-------------------------------------------------
 
-function makeBar(segComs){
+function makeBar(vid, segComs){
     let divWidthAll = 320 - 20;
     let divHeight = 20;
 
@@ -42,7 +49,7 @@ function makeBar(segComs){
     for(let coms of segComs){   
         code += `<div class="bar" style="width:${divWidth}px; height:${divHeight}px;` +
         'border:1px solid; display: inline-block;" ' +
-        `data-idx=${idx} ` +
+        `data-vid=${vid} ` +
         `data-c0=${coms[0]} data-c1=${coms[1]} data-c2=${coms[2]} ` +
         `data-c3=${coms[3]} data-c4=${coms[4]} data-idx=${idx}` +
         '></div>';
@@ -65,7 +72,7 @@ function makevideoSet(vid, title, segComs){
             `<img data-vid="${vid}" data-title="${title}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
             '</img>'+
             `<div class="thumTitle" style="text-align: center;">${titleDrop(title, 40)}</div>` +
-            makeBar(segComs) +
+            makeBar(vid, segComs) +
             '</div>'+
         '<div style="width:200px; position: relative; float: left;"></div>';
         return code;
@@ -165,7 +172,7 @@ function clickId4compMove(){
     });
 }
 
-function clickComp(){
+function clickComp(){   
     $(".comp").on("click", function(){
         let code = "";
         let comp = $(this).text();
@@ -198,7 +205,7 @@ function clickComp(){
                     let idx = 0;
                     id4compArrSize = parseInt(videoInfos.length / MAXIDX);
                     for(let videoInfo of videoInfos){
-                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 20)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
+                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 25)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
                         idx++;
                         if(idx == MAXIDX){
                             id4compArr.push(code);
@@ -218,7 +225,7 @@ function clickComp(){
                 //적다면
                 else{
                     for(let videoInfo of videoInfos){
-                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 20)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
+                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 25)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
                     }
                     $('#console').html(code);
                     history.push(code);
@@ -237,7 +244,11 @@ function horverBar(){
         '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
         '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
         $('#console').html(code);
-        history.push(code);
+        if($(this).data('vid') != lastHoverVid && $(this).data('idx') != lastHoverIdx){
+            history.push(code);
+            lastHoverVid = $(this).data('vid');
+            lastHoverIdx = $(this).data('idx');
+        }
         clickComp();
     });
 }
@@ -267,8 +278,11 @@ $(document).keydown(function(event){
 $(document).ready(function(){
     id2title = new Map();
     id2autor = new Map();
+    
     history = new Array();
     history.push("NULL");
+    lastHoverIdx = "-1";
+    lastHoverVid = "-1";
 
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();

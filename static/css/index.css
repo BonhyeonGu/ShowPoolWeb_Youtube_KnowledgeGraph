@@ -15,11 +15,10 @@
     
     list-style-type: none;
     margin: 0;
-    #overflow: hidden;
-    background-color: #333;
+    background-color: rgb(255, 255, 255);
     #display:inline-block;
     display: block;
-    color: white;
+    color: black;
     text-align: center;
     padding: 3px 0px;
     width: 80px;
@@ -29,7 +28,7 @@
 }
 
 #consoleBack:hover {
-    background-color: #111;
+    background-color: rgb(226, 226, 226);
 }
 
 #console {
@@ -88,8 +87,31 @@
     text-decoration: none;
     border-top: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
-  }
+}
 
-  .comp:hover {
+.comp:hover {
     background-color: #111;
-  }
+}
+
+.bar:hover {
+    background-color: #111;
+}
+
+.id4comp {
+    list-style-type: none;
+    margin: 0;
+    background-color: rgb(107, 107, 107);
+    #display:inline-block;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 0px;
+    width: 250px;
+    text-decoration: none;
+    border-top: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+}
+
+.id4comp:hover {
+    background-color: #333;
+}
