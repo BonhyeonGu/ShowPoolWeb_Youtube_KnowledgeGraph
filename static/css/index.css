@@ -61,8 +61,14 @@
     background-color:rgba(255, 255, 255, 0.8);
 }
 
-#videoTitle {
 
+
+
+.videoTitle {
+    width: 310px;
+    margin: auto;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 #loading {
@@ -93,8 +99,12 @@
     background-color: #111;
 }
 
+.bar {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
 .bar:hover {
-    background-color: #111;
+    background-color: rgba(31, 31, 31, 0.9);
 }
 
 .id4comp {

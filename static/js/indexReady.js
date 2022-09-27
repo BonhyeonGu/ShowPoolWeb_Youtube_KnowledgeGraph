@@ -68,10 +68,10 @@ function titleDrop(title, sizeMax){
 }
 
 function makevideoSet(vid, title, segComs){
-    let code = `<div class="thumSet" style="float: left; margin: 20px;">`+
-            `<img data-vid="${vid}" data-title="${title}" class="thumImg" src="https://img.youtube.com/vi/${vid}/mqdefault.jpg"` +
-            '</img>'+
-            `<div class="thumTitle" style="text-align: center;">${titleDrop(title, 40)}</div>` +
+    let code = `<div class="thumSet" data-vid="${vid}" data-title="${title}" style="float: left; margin: 20px; height: 180px; width: 320px; background-image: url(https://img.youtube.com/vi/${vid}/mqdefault.jpg);">`+
+            `<div class="thumSetTarget" style="width: 320px; height: 10px"></div>`+
+            `<div class="videoTitle">${titleDrop(title, 40)}</div>` +
+            `<div class="thumSetTarget" style="height: 100px"></div>`+
             makeBar(vid, segComs) +
             '</div>'+
         '<div style="width:200px; position: relative; float: left;"></div>';
@@ -107,9 +107,11 @@ function standby(){
 }
 
 function clickThum(){
-    $(".thumImg").on("click", function(){
-        let yid = $(this).data('vid');
-        let title = $(this).data('title');
+    $(".thumSetTarget").on("click", function(){
+        let sel = $(this).parent();
+        console.log("clickThum");
+        let yid = $(sel).data('vid');
+        let title = $(sel).data('title');
         let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
@@ -123,15 +125,14 @@ function clickThum(){
 function clickBar(){
     $(".bar").on("click", function(){
         let time = Number($(this).data('idx')) * 60 * 5;
-        
-        let sel = $(this).parent().parent().children('img');
+        let sel = $(this).parent().parent();
         let yid = sel.data('vid');
         let title = sel.data('title');
-
         let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1&start=" + time;
+        console.log(src);
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
-        $("#windowVideoBlock").show();
+        $("#windowVideoBlock").show();  
         $("#windowVideo").show();
     });
 }

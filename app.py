@@ -12,7 +12,7 @@ neo = Neo()
 #--------------------------------------------------------------------------------------
 
 @app.route("/")
-def root():
+def root()	:
 	return redirect(url_for('index'))
 
 @app.route("/index")
