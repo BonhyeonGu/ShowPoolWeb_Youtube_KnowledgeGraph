@@ -37,6 +37,12 @@ function id2info_push(vid){
     return [ret.title, ret.author_name];
 }
 
+function abspos(e){
+    this.x = e.clientX + (document.documentElement.scrollLeft?document.documentElement.scrollLeft:document.body.scrollLeft);
+    this.y = e.clientY + (document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop);
+    return this;
+}
+
 //-------------------------------------------------
 
 function makeBar(vid, segComs){
@@ -254,6 +260,32 @@ function horverBar(){
     });
 }
 
+function hoverBar2Not(){
+    $(".btnHoverMenuClose").on("click", function(){
+        $("#hoverMenu").hide();
+    });
+}
+
+function hoverBar2(){
+    $(".bar").on("mouseenter", function(e){
+        $("#hoverMenu").hide();
+        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' +
+        '<div class="comp">' + $(this).data('c1')+ '</div>' +
+        '<div class="comp">' + $(this).data('c2')+ '</div>' +
+        '<div class="comp">' + $(this).data('c3')+ '</div>' +
+        '<div class="comp">' + $(this).data('c4')+ '</div>' +
+        '<div class="btnHoverMenuClose">CLOSE</div>';
+        pos = abspos(e);
+        readyX = pos.x+"px";
+        readyY = (pos.y+10)+"px";
+        $("#hoverMenu").css({"top": readyY, "left":readyX});
+        $('#hoverMenu').html(code);
+        $("#hoverMenu").show();
+        hoverBar2Not();
+        //clickComp();
+    });
+}
+
 //-------------------------------------------------
 
 function clickBack(){
@@ -287,12 +319,13 @@ $(document).ready(function(){
 
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();
+    $("#hoverMenu").hide();
     //비디오 리스트 요청(내부)
     standby();
     clickThum();
-    horverBar();
+    //horverBar();
+    hoverBar2();
     clickBar();
-    
     clickBack();
 
     $("#btnClose").on("click", function(){
@@ -302,8 +335,6 @@ $(document).ready(function(){
         $("#windowVideo").hide()
         $("#windowVideoBlock").hide()
     });
-
-
 
     $("#loading").hide()
 });

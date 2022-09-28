@@ -61,14 +61,11 @@
     background-color:rgba(255, 255, 255, 0.8);
 }
 
-
-
-
 .videoTitle {
     width: 310px;
     margin: auto;
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 #loading {
@@ -82,22 +79,42 @@
 .comp {
     list-style-type: none;
     margin: 0;
-    #overflow: hidden;
-    background-color: #333;
+    background-color: rgba(68, 68, 68, 1.0);
     #display:inline-block;
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 0px;
-    width: 240px;
+    width: 200px;
+    height: 20px;
+    font-size: 15px;
     text-decoration: none;
     border-top: 1px solid #bbb;
     border-bottom: 1px solid #bbb;
 }
 
 .comp:hover {
+    background-color: rgba(17, 17, 17, 0.9);
+}
+
+.btnHoverMenuClose {
+    list-style-type: none;
+    margin: 0;
+    background-color: #333;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 0px;
+    width: 200px;
+    height: 20px;
+    text-decoration: none;
+    border-top: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+}
+
+.btnHoverMenuClose:hover {
     background-color: #111;
 }
+
 
 .bar {
     background-color: rgba(255, 255, 255, 0.8);
