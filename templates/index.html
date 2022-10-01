@@ -6,19 +6,21 @@
 	<script src ="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src ="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 
-	<script src="{{ url_for('static', filename='js/indexReady.js') }}"></script>
-	<link rel="stylesheet" href=" {{ url_for('static', filename='css/index.css') }} ">
+	<script src="{{ url_for('static', filename='js/videoSet.js') }}"></script>
+
+    <link rel="stylesheet" href=" {{ url_for('static', filename='css/index.css') }} ">
+	<link rel="stylesheet" href=" {{ url_for('static', filename='css/videoSet.css') }} ">
 </head>
 
 <body>
-    <div id="loading">Loading...</div>
+    <div id="loading">영상 리스트 들고오는 중</div>
     <div id="title"></div>
     <div id="main">
         <div id="consoleTitle">
             ShowPoolWeb Youtube <br /> KnowledgeGraph
         </div>
         <div id="console">
-            NULL
+            NULL    
         </div>
         <div id="listVideo"></div>
     </div>
