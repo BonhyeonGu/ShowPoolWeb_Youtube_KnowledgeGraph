@@ -43,6 +43,14 @@ function abspos(e){
     return this;
 }
 
+function titleDrop(title, sizeMax){
+    let ret = title;
+    if(title.length > sizeMax){
+        ret = title.substr(0, sizeMax-3) + "...";
+    }
+    return ret;
+}
+
 //-------------------------------------------------
 
 function makeBar(vid, segComs){
@@ -63,14 +71,6 @@ function makeBar(vid, segComs){
     }
     code += '</div>'
     return code;
-}
-
-function titleDrop(title, sizeMax){
-    let ret = title;
-    if(title.length > sizeMax){
-        ret = title.substr(0, sizeMax-3) + "...";
-    }
-    return ret;
 }
 
 function makevideoSet(vid, title, segComs){
@@ -104,6 +104,7 @@ function standby(){
                     success: function(res){
                         let segComs = res.segComs;
                         let code = makevideoSet(vid, title, segComs);
+                        console.log(segComs);
                         $("#listVideo").append(code);
                     }
                 });
@@ -282,7 +283,14 @@ function hoverBar2(){
         $('#hoverMenu').html(code);
         $("#hoverMenu").show();
         hoverBar2Not();
-        //clickComp();
+        clickComp2();
+    });
+}
+
+function clickComp2(){   
+    $(".comp").on("click", function(){
+        window.open('https://en.wikipedia.org/wiki/' + $(this).data('c'));  
+        //location.href='https://en.wikipedia.org/wiki/' + $(this).data('c');
     });
 }
 
