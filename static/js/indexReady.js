@@ -269,12 +269,12 @@ function hoverBar2Not(){
 function hoverBar2(){
     $(".bar").on("mouseenter", function(e){
         $("#hoverMenu").hide();
-        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' +
-        '<div class="comp">' + $(this).data('c1')+ '</div>' +
-        '<div class="comp">' + $(this).data('c2')+ '</div>' +
-        '<div class="comp">' + $(this).data('c3')+ '</div>' +
-        '<div class="comp">' + $(this).data('c4')+ '</div>' +
-        '<div class="btnHoverMenuClose">CLOSE</div>';
+        let code = "";
+        for(let i=0; i<5; i++){
+            code += '<div class="comp"' + 'data-c=' + $(this).data('c' + i.toString()) +
+            '>' + titleDrop($(this).data('c' + i.toString()), 22) + '</div>';
+        }
+        code += '<div class="btnHoverMenuClose">CLOSE</div>';
         pos = abspos(e);
         readyX = pos.x+"px";
         readyY = (pos.y+10)+"px";

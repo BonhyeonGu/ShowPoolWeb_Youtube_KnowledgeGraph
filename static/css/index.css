@@ -58,7 +58,7 @@
     z-index: 8;
     width: 190%;
     height: 90%;
-    background-color:rgba(255, 255, 255, 0.8);
+    background-color:rgba(255, 255, 255, 0.9);
 }
 
 .videoTitle {
@@ -99,9 +99,9 @@
 .btnHoverMenuClose {
     list-style-type: none;
     margin: 0;
-    background-color: #333;
+    background-color: rgb(226, 226, 226);
     display: block;
-    color: white;
+    color: rgb(0, 0, 0);
     text-align: center;
     padding: 14px 0px;
     width: 200px;
@@ -112,16 +112,16 @@
 }
 
 .btnHoverMenuClose:hover {
-    background-color: #111;
+    background-color: rgb(189, 189, 189);
 }
 
 
 .bar {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 95, 95, 0.8);
 }
 
 .bar:hover {
-    background-color: rgba(31, 31, 31, 0.9);
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .id4comp {
