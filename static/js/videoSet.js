@@ -5,20 +5,10 @@ let id4compArrIdx;
 let id4compArrSize;
 let id4compArr;
 
-let history = new Array();
 let lastHoverIdx;
 let lastHoverVid;
 
 //-------------------------------------------------
-function historyPop(){
-    console.log(history);
-    if(history.length != 0){
-        $("#console").html(history.pop());
-    }
-    else{
-        $("#console").html("NULL");
-    }
-}
 
 function id2info_push(vid){
     let ret;
@@ -104,7 +94,38 @@ function standby(){
                     success: function(res){
                         let segComs = res.segComs;
                         let code = makevideoSet(vid, title, segComs);
-                        console.log(segComs);
+                        $("#listVideo").append(code);
+                    }
+                });
+            }
+        }
+    });
+}
+
+function standbyR(){
+    let code = "<hr />";
+    code = "Re"
+    $.ajax({
+        url: "/getVideosR",
+        type: "POST",
+        async: false,
+        dataType: "json",
+        contentType: "application/json",
+        success: function(res){
+            for(let vid of res.videoIds){
+                let [title, autor] = id2info_push(vid);
+                $.ajax({
+                    url: "/getVideoSegKCS",
+                    type: "POST",
+                    async: false,
+                    dataType: "json",
+                    data: JSON.stringify({vid: vid}),
+                    contentType: "application/json",
+                    success: function(res){
+                        let segComs = res.segComs;
+                        code += makevideoSet(vid, title, segComs);
+
+                        code += "<hr />";
                         $("#listVideo").append(code);
                     }
                 });
@@ -244,23 +265,6 @@ function clickComp(){
     });
 }
 
-function horverBar(){
-    $(".bar").on("mouseenter", function(){
-        let code = '<div class="comp">' + $(this).data('c0')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c1')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c2')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c3')+ '</div>' + '<br />' +
-        '<div class="comp">' + $(this).data('c4')+ '</div>' + '<br />';
-        $('#console').html(code);
-        if($(this).data('vid') != lastHoverVid && $(this).data('idx') != lastHoverIdx){
-            history.push(code);
-            lastHoverVid = $(this).data('vid');
-            lastHoverIdx = $(this).data('idx');
-        }
-        clickComp();
-    });
-}
-
 function hoverBar2Not(){
     $(".btnHoverMenuClose").on("click", function(){
         $("#hoverMenu").hide();
@@ -296,14 +300,6 @@ function clickComp2(){
 
 //-------------------------------------------------
 
-function clickBack(){
-    $("#consoleBack").on("click", function(){
-        historyPop();
-    });
-}
-
-//-------------------------------------------------
-
 $(document).keydown(function(event){
     $(document).keydown(function(event) {
         if ( event.keyCode == 27 || event.which == 27 ) {
@@ -319,11 +315,6 @@ $(document).keydown(function(event){
 $(document).ready(function(){
     id2title = new Map();
     id2autor = new Map();
-    
-    history = new Array();
-    history.push("NULL");
-    lastHoverIdx = "-1";
-    lastHoverVid = "-1";
 
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();
@@ -334,7 +325,6 @@ $(document).ready(function(){
     //horverBar();
     hoverBar2();
     clickBar();
-    clickBack();
 
     $("#btnClose").on("click", function(){
         let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+

@@ -1,11 +1,13 @@
 #--------------------------------------------------------------------------------------
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 #--------------------------------------------------------------------------------------
 from neo import Neo
+from secret.secret import session_secret_key
 #--------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------
 app = Flask(__name__)
+app.secret_key = session_secret_key
 neo = Neo()
 #--------------------------------------------------------------------------------------
 
@@ -18,6 +20,35 @@ def root()	:
 @app.route("/index")
 def index():
 	return render_template('index.html')
+
+#--------------------------------------------------------------------------------------
+
+@app.route("/backLogin")
+def backLogin():
+	return redirect(url_for('index'))
+
+@app.route("/backLogout")
+def backLogout():
+	if 'id' in session:
+		session.clear()
+	return redirect(url_for('index'))
+
+@app.route("/getWho")
+def getWho():
+	if 'id' in session:
+		j = {"id" : session['id']}
+	else:
+		j = {"id" : 'ANONYMOUS'}
+	return jsonify(j)
+
+#--------------------------------------------------------------------------------------
+
+@app.route("/getVideosR", methods=['POST'])
+def getVideosR():
+	global neo
+	ret = neo.runQuery(0)	
+	j = {"videoIds" : ret}
+	return jsonify(j)
 
 #--------------------------------------------------------------------------------------
 
