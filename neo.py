@@ -1,9 +1,9 @@
 from neo4j import GraphDatabase
 
-from secret.secret import dbid, dbpw, dbaddr, dbport
+from secret.secret import neo_dbid, neo_dbpw, neo_dbaddr, neo_dbport
 class Neo:
     def __init__(self):
-        self.driver = GraphDatabase.driver(uri=f"neo4j://{dbaddr}:{dbport}", auth=(dbid, dbpw))
+        self.driver = GraphDatabase.driver(uri=f"neo4j://{neo_dbaddr}:{neo_dbport}", auth=(neo_dbid, neo_dbpw))
     
     def __del__(self):
         self.driver.close()    
