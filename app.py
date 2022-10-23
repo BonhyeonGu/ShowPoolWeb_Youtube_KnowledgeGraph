@@ -2,35 +2,48 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 #--------------------------------------------------------------------------------------
 from neo import Neo
+from pymongo import MongoClient
 from secret.secret import session_secret_key
+from secret.secret import mongo_dbid, mongo_dbpw, mongo_dbaddr, mongo_dbport
 #--------------------------------------------------------------------------------------
-
 #--------------------------------------------------------------------------------------
 app = Flask(__name__)
 app.secret_key = session_secret_key
 neo = Neo()
 #--------------------------------------------------------------------------------------
-
+client = MongoClient(host=mongo_dbaddr, port=mongo_dbport, username=mongo_dbid, password=mongo_dbpw)
+db = client['showpool']
 #--------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------
 
 @app.route("/")
-def root()	:
+def root():
 	return redirect(url_for('index'))
 
 @app.route("/index")
 def index():
-	return render_template('index.html')
+	if 'id' in session:
+		return render_template('index.html')
+	else:
+		return render_template('index.html')
 
 #--------------------------------------------------------------------------------------
 
-@app.route("/backLogin")
+@app.route("/backLogin", methods=['POST'])
 def backLogin():
-	return redirect(url_for('index'))
+	inp_id = request.form['id']
+	inp_pw = request.form['pw']
+	usersCol = db['users']
+	checkCol = usersCol.find_one({"id": inp_id }, {"pw": 1})
+	if checkCol is not None:
+		if checkCol['pw'] == inp_pw:
+			return render_template('index.html')
+	return jsonify({"m" : "login error"})
 
 @app.route("/backLogout")
 def backLogout():
 	if 'id' in session:
-		session.clear()
+		session.clear()	
 	return redirect(url_for('index'))
 
 @app.route("/getWho")
