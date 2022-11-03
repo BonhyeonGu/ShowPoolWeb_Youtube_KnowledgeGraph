@@ -37,7 +37,8 @@ def backLogin():
 	checkCol = usersCol.find_one({"id": inp_id }, {"pw": 1})
 	if checkCol is not None:
 		if checkCol['pw'] == inp_pw:
-			return render_template('index.html')
+			session['id'] = inp_id
+			return render_template('index.html', user_id = inp_id)
 	return jsonify({"m" : "login error"})
 
 @app.route("/backLogout")
@@ -45,6 +46,19 @@ def backLogout():
 	if 'id' in session:
 		session.clear()	
 	return redirect(url_for('index'))
+
+#--------------------------------------------------------------------------------------
+
+@app.route("/eventClick")
+def eventClick():
+	if 'id' in session:
+		j = {"id" : session['id']}
+	else:
+		j = {"id" : 'ANONYMOUS'}
+	return jsonify(j)
+	
+#클릭했을때 세그먼트별로 조사되어야 하는가?
+#네오포지에 저장할 정보는 없는가?
 
 @app.route("/getWho")
 def getWho():

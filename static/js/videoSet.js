@@ -141,6 +141,21 @@ function clickThum(){
         let yid = $(sel).data('vid');
         let title = $(sel).data('title');
         let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
+        //클릭 이벤트
+        $.ajax({
+            url: "/eventClick",
+            type: "POST",
+            async: false,
+            dataType: "json",
+            data: JSON.stringify({vid : vid}),
+            contentType: "application/json",
+            success: function(res){
+                let segComs = res.segComs;
+                let code = makevideoSet(vid, title, segComs);
+                $("#listVideo").append(code);
+            }
+        });
+        //클릭 이벤트 종료
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
         $("#windowVideoBlock").show();
