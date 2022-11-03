@@ -1,6 +1,7 @@
 #--------------------------------------------------------------------------------------
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 #--------------------------------------------------------------------------------------
+from datetime import datetime
 from neo import Neo
 from pymongo import MongoClient
 from secret.secret import session_secret_key
@@ -13,7 +14,9 @@ neo = Neo()
 #--------------------------------------------------------------------------------------
 client = MongoClient(host=mongo_dbaddr, port=mongo_dbport, username=mongo_dbid, password=mongo_dbpw)
 db = client['showpool']
+doc = db['users']
 #--------------------------------------------------------------------------------------
+REF_NUM = 10 #참고할 영상 개수, 추천 시스템과 동일해야함, 세그먼트로 변경될 수 있음
 #-------------------------------------------------------------------------------------
 
 @app.route("/")
@@ -23,9 +26,9 @@ def root():
 @app.route("/index")
 def index():
 	if 'id' in session:
-		return render_template('index.html')
+		return render_template('index.html', user_id=session['id'])
 	else:
-		return render_template('index.html')
+		return render_template('index.html', user_id="ANNONYMOUS")
 
 #--------------------------------------------------------------------------------------
 
@@ -33,12 +36,11 @@ def index():
 def backLogin():
 	inp_id = request.form['id']
 	inp_pw = request.form['pw']
-	usersCol = db['users']
-	checkCol = usersCol.find_one({"id": inp_id }, {"pw": 1})
+	checkCol = doc.find_one({"id": inp_id }, {"pw": 1})
 	if checkCol is not None:
 		if checkCol['pw'] == inp_pw:
 			session['id'] = inp_id
-			return render_template('index.html', user_id = inp_id)
+			return render_template('index.html', user_id=inp_id)
 	return jsonify({"m" : "login error"})
 
 @app.route("/backLogout")
@@ -49,18 +51,23 @@ def backLogout():
 
 #--------------------------------------------------------------------------------------
 
-@app.route("/eventClick")
+@app.route("/eventClick", methods=['POST'])
 def eventClick():
-	if 'id' in session:
-		j = {"id" : session['id']}
-	else:
-		j = {"id" : 'ANONYMOUS'}
-	return jsonify(j)
-	
-#클릭했을때 세그먼트별로 조사되어야 하는가?
-#네오포지에 저장할 정보는 없는가?
+	params = request.get_json()
+	vid = params['vid']
+	comps = params['comps']
+	user_info = doc.find_one({"id": session['id']})
+	if vid in user_info['clickedID']:
+		return jsonify({"msg" : 'skip'})
+	if len(user_info['clickedID']) > REF_NUM:
+		doc.update_one({"id" : user_info['id']}, {"$pop":{"clickedID" : -1}})
+		doc.update_one({"id" : user_info['id']}, {"$pop":{"clickedInfo" : -1}})
+	doc.update_one({"id" : user_info['id']}, {"$push":{"clickedID" : vid}})
+	doc.update_one({"id" : user_info['id']}, {"$push":{"clickedInfo" : comps}})
+	doc.update_one({"id" : user_info['id']}, {"$set":{"time_lastclick" : datetime.today().strftime("%Y%m%d%H%M%S")}})
+	return jsonify({"msg" : 'clear'})
 
-@app.route("/getWho")
+@app.route("/getWho", methods=['POST'])
 def getWho():
 	if 'id' in session:
 		j = {"id" : session['id']}
@@ -73,7 +80,7 @@ def getWho():
 @app.route("/getVideosR", methods=['POST'])
 def getVideosR():
 	global neo
-	ret = neo.runQuery(0)	
+	ret = neo.runQuery(0)
 	j = {"videoIds" : ret}
 	return jsonify(j)
 

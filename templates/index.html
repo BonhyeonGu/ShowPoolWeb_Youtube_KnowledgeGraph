@@ -7,6 +7,7 @@
 	<script src ="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 
 	<script src="{{ url_for('static', filename='js/videoSet.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
     <link rel="stylesheet" href=" {{ url_for('static', filename='css/index.css') }} ">
 	<link rel="stylesheet" href=" {{ url_for('static', filename='css/videoSet.css') }} ">
@@ -20,16 +21,21 @@
             ShowPoolWeb Youtube <br /> KnowledgeGraph
         </div>
         <div id="console">
-            <div id="userInfo">
-                <button>로그아웃</button>
-            </div>
-            <div id="login">
-                <form action="/backLogin" method ="post">
+            {% if user_id == 'ANNONYMOUS' %}
+            <div id="login" class="boxInput">
+                해당 폼은 추천시스템<br />테스트용입니다.<br />
+                <form action="/backLogin" method ="post"><br/>
                     <input type="text" id="id" name="id" maxlength="8" placeholder="아이디" /><br/>
-				    <input type="password" id="pw" name="pw" placeholder="비밀번호" /><br/>
+				    <input type="password" id="pw" name="pw" placeholder="비밀번호" /><br/><br/>
                     <input type="submit" value='로그인'/>
                 </form>
             </div>
+            {% else %}
+            <div id="userInfo">
+                현재 로그인된 유저 : {{user_id}} <br /><br/>
+                <button id="btnLogout" >로그아웃</button>
+            </div>
+            {% endif %}
         </div>
         <div id="listVideoR"></div>
         <div id="listVideo"></div>

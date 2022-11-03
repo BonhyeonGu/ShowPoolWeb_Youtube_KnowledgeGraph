@@ -1,13 +1,7 @@
 //-------------------------------------------------
-let id2title = new Map();
-let id2autor = new Map();
-let id4compArrIdx;
-let id4compArrSize;
-let id4compArr;
-
-let lastHoverIdx;
-let lastHoverVid;
-
+let id2title;
+let id2autor;
+let id2comp;
 //-------------------------------------------------
 
 function id2info_push(vid){
@@ -93,39 +87,8 @@ function standby(){
                     contentType: "application/json",
                     success: function(res){
                         let segComs = res.segComs;
+                        id2comp.set(vid, segComs);
                         let code = makevideoSet(vid, title, segComs);
-                        $("#listVideo").append(code);
-                    }
-                });
-            }
-        }
-    });
-}
-
-function standbyR(){
-    let code = "<hr />";
-    code = "Re"
-    $.ajax({
-        url: "/getVideosR",
-        type: "POST",
-        async: false,
-        dataType: "json",
-        contentType: "application/json",
-        success: function(res){
-            for(let vid of res.videoIds){
-                let [title, autor] = id2info_push(vid);
-                $.ajax({
-                    url: "/getVideoSegKCS",
-                    type: "POST",
-                    async: false,
-                    dataType: "json",
-                    data: JSON.stringify({vid: vid}),
-                    contentType: "application/json",
-                    success: function(res){
-                        let segComs = res.segComs;
-                        code += makevideoSet(vid, title, segComs);
-
-                        code += "<hr />";
                         $("#listVideo").append(code);
                     }
                 });
@@ -137,25 +100,33 @@ function standbyR(){
 function clickThum(){
     $(".thumSetTarget").on("click", function(){
         let sel = $(this).parent();
-        console.log("clickThum");
-        let yid = $(sel).data('vid');
+        let vid = $(sel).data('vid');
         let title = $(sel).data('title');
-        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
-        //클릭 이벤트
+        let src = "http://www.youtube.com/embed/" + vid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
         $.ajax({
-            url: "/eventClick",
+            url: "/getWho",
             type: "POST",
             async: false,
             dataType: "json",
-            data: JSON.stringify({vid : vid}),
+            data: JSON.stringify({msg : "plz"}),
             contentType: "application/json",
             success: function(res){
-                let segComs = res.segComs;
-                let code = makevideoSet(vid, title, segComs);
-                $("#listVideo").append(code);
+                if(res.id != 'ANONYMOUSE'){
+                    $.ajax({
+                        url: "/eventClick",
+                        type: "POST",
+                        async: false,
+                        dataType: "json",
+                        data: JSON.stringify({vid : vid, comps : id2comp.get(vid)}),
+                        contentType: "application/json",
+                        success: function(res){
+                            console.log("ok");
+                        }
+                    });
+                }
             }
         });
-        //클릭 이벤트 종료
+
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
         $("#windowVideoBlock").show();
@@ -179,107 +150,7 @@ function clickBar(){
         $("#windowVideo").show();
     });
 }
-
-function clickId4Comp(){
-    $(".id4comp").on("click", function(){
-        let time = Number($(this).data('idx')) * 60 * 5;
-        let yid = $(this).data('vid');
-        let title = $(this).data('title');
-        let src = "http://www.youtube.com/embed/" + yid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1&start=" + time;
-        $("#windowVideo").children('iframe').attr("src", src);
-        $("#windowVideo").children('#videoTitle').text(title);
-        $("#windowVideoBlock").show();
-        $("#windowVideo").show();
-    });
-}
-
-function clickId4compMove(){
-    console.log(id4compArr);
-    console.log(id4compArrSize);
-    $(".prev").on("click", function(){
-        if(id4compArrIdx > 1){
-            id4compArrIdx--;
-            let tmp = `${id4compArr[id4compArrIdx - 1]}<div class="id4compMove"><span class="prev"> prev </span>` +
-                `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
-            $('#console').html(tmp);
-            clickId4compMove();
-        }
-    });
-    $(".next").on("click", function(){
-        if(id4compArrIdx < id4compArrSize){
-            id4compArrIdx++;
-            let tmp = `${id4compArr[id4compArrIdx - 1]}<div class="id4compMove"><span class="prev"> prev </span>` +
-                `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
-            $('#console').html(tmp);
-            clickId4compMove();
-        }
-    });
-}
-
-function clickComp(){   
-    $(".comp").on("click", function(){
-        let code = "";
-        let comp = $(this).text();
-        $(this).text("로딩중");
-        $.ajax({
-            url: "/getKC_Videos",
-            type: "POST",
-            async: false,
-            dataType: "json",
-            data: JSON.stringify({comp: comp}),
-            contentType: "application/json",
-            success: function(res){
-                let videoId = res.videoIds;
-                let videoInfos = new Array();
-                for(let id of videoId){
-                    videoInfos.push({title:id2title.get(id[0]), idx:id[1], id:id[0]});
-                }
-                videoInfos.sort(function(a, b){
-                    if(a.title < b.title) return 1;
-                    else if(a.title > b.title) return -1;
-                    else {
-                        if(a.idx > b.idx) return 1;
-                        else return -1;
-                    }
-                });
-                let MAXIDX = 10;
-                //만약 해당 kc를 가진 영상이 너무 많으면
-                if(videoInfos.length > MAXIDX){
-                    id4compArr = new Array();
-                    let idx = 0;
-                    id4compArrSize = parseInt(videoInfos.length / MAXIDX);
-                    for(let videoInfo of videoInfos){
-                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 25)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
-                        idx++;
-                        if(idx == MAXIDX){
-                            id4compArr.push(code);
-                            code = "";
-                            idx = 0;
-                        }
-                    }
-                    
-                    id4compArrIdx = 1;
-                    let tmp = `${id4compArr[0]}<div class="id4compMove"><span class="prev"> prev </span>` +
-                    `<span> ${id4compArrIdx} </span><span class="next"> next </span></div>`;
-                    $('#console').html(tmp);
-                    history.push(tmp);
-                    clickId4compMove();
-                }
-
-                //적다면
-                else{
-                    for(let videoInfo of videoInfos){
-                        code += `<div class="id4comp" data-vid=${videoInfo.id} data-idx=${videoInfo.idx} data-title='${videoInfo.title}'>${titleDrop(videoInfo.title, 25)}의 ${parseInt(videoInfo.idx)+1}번째</div> <br />`;
-                    }
-                    $('#console').html(code);
-                    history.push(code);
-                }
-            }
-        });
-        clickId4Comp();
-    });
-}
-
+    
 function hoverBar2Not(){
     $(".btnHoverMenuClose").on("click", function(){
         $("#hoverMenu").hide();
@@ -330,6 +201,7 @@ $(document).keydown(function(event){
 $(document).ready(function(){
     id2title = new Map();
     id2autor = new Map();
+    id2comp = new Map();
 
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();
@@ -337,7 +209,6 @@ $(document).ready(function(){
     //비디오 리스트 요청(내부)
     standby();
     clickThum();
-    //horverBar();
     hoverBar2();
     clickBar();
 
