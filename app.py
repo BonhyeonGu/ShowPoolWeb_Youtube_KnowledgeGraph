@@ -16,7 +16,7 @@ client = MongoClient(host=mongo_dbaddr, port=mongo_dbport, username=mongo_dbid, 
 db = client['showpool']
 doc = db['users']
 #--------------------------------------------------------------------------------------
-REF_NUM = 10 #참고할 영상 개수, 추천 시스템과 동일해야함, 세그먼트로 변경될 수 있음
+REF_NUM = 3 #참고할 영상 개수, 추천 시스템과 동일해야함, 세그먼트로 변경될 수 있음
 #-------------------------------------------------------------------------------------
 
 @app.route("/")
@@ -59,11 +59,9 @@ def eventClick():
 	user_info = doc.find_one({"id": session['id']})
 	if vid in user_info['clickedID']:
 		return jsonify({"msg" : 'skip'})
-	if len(user_info['clickedID']) > REF_NUM:
+	if len(user_info['clickedID']) >= REF_NUM:
 		doc.update_one({"id" : user_info['id']}, {"$pop":{"clickedID" : -1}})
-		doc.update_one({"id" : user_info['id']}, {"$pop":{"clickedInfo" : -1}})
 	doc.update_one({"id" : user_info['id']}, {"$push":{"clickedID" : vid}})
-	doc.update_one({"id" : user_info['id']}, {"$push":{"clickedInfo" : comps}})
 	doc.update_one({"id" : user_info['id']}, {"$set":{"time_lastclick" : datetime.today().strftime("%Y%m%d%H%M%S")}})
 	return jsonify({"msg" : 'clear'})
 

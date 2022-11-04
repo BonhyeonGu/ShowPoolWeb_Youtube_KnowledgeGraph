@@ -38,10 +38,10 @@ function titleDrop(title, sizeMax){
 //-------------------------------------------------
 
 function makeBar(vid, segComs){
-    let divWidthAll = 320 - 20;
+    let divWidthAll = 320 - 0;
     let divHeight = 20;
 
-    let divWidth = (divWidthAll / segComs.length).toFixed(4);
+    let divWidth = (divWidthAll / segComs.length).toFixed(2) - 2;
     let code = '<br /><div style="text-align: center;">';
     let idx = 0;
     for(let coms of segComs){   
@@ -172,7 +172,7 @@ function hoverBar2(){
         $("#hoverMenu").css({"top": readyY, "left":readyX});
         $('#hoverMenu').html(code);
         $("#hoverMenu").show();
-        hoverBar2Not();
+        hoverBar2Not();``
         clickComp2();
     });
 }
