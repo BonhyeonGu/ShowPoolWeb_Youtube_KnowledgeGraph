@@ -47,3 +47,33 @@
     height: 200px;
     border: 1px solid rgb(0, 0, 0);
 }
+
+.line {
+    left: 300px;
+    position: relative;
+    width: 1050px;
+	display:flex;
+	flex-basis:100%;
+	align-items:center;
+	color:rgba(0,0,0,0.35);
+	font-size:14px;
+	margin:8px 0px;
+}
+.line::before{
+	content:"";
+	flex-grow:1;
+	margin:0px 16px;
+	background:rgba(0,0,0,0.35);
+	height:1px;
+	font-size:0px;
+	line-height: 0px;
+}
+.line::after {
+	content:"";
+	flex-grow:1;
+	margin:0px 16px;
+	background:rgba(0,0,0,0.35);
+	height:1px;
+	font-size:0px;
+	line-height: 0px;
+}

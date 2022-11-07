@@ -40,8 +40,8 @@ function titleDrop(title, sizeMax){
 function makeBar(vid, segComs){
     let divWidthAll = 320 - 0;
     let divHeight = 20;
-
-    let divWidth = (divWidthAll / segComs.length).toFixed(2) - 2;
+    
+    let divWidth = (divWidthAll / segComs.length).toFixed(2) - 2.2;
     let code = '<br /><div style="text-align: center;">';
     let idx = 0;
     for(let coms of segComs){   
@@ -92,6 +92,50 @@ function standby(){
                         $("#listVideo").append(code);
                     }
                 });
+            }
+        }
+    });
+}
+
+function standby1(){
+    $.ajax({
+        url: "/getVideoR1s",
+        type: "POST",
+        async: false,
+        dataType: "json",
+        contentType: "application/json",
+        success: function(res){
+            if (res.videoRecomms.length > 0)
+            {
+                for(let videoRecomm of res.videoRecomms){
+                    let vid = videoRecomm[0];
+                    let title = id2title.get(vid);
+                    let segComs = id2comp.get(vid);
+                    let code = makevideoSet(vid, title, segComs);
+                    $("#listVideoR1").append(code);
+                }
+            }
+        }
+    });
+}
+
+function standby2(){
+    $.ajax({
+        url: "/getVideoR2s",
+        type: "POST",
+        async: false,
+        dataType: "json",
+        contentType: "application/json",
+        success: function(res){
+            if (res.videoRecomms.length > 0)
+            {
+                for(let videoRecomm of res.videoRecomms){
+                    let vid = videoRecomm[0];
+                    let title = id2title.get(vid);
+                    let segComs = id2comp.get(vid);
+                    let code = makevideoSet(vid, title, segComs);
+                    $("#listVideoR2").append(code);
+                }
             }
         }
     });
@@ -208,6 +252,8 @@ $(document).ready(function(){
     $("#hoverMenu").hide();
     //비디오 리스트 요청(내부)
     standby();
+    standby1();
+    standby2();
     clickThum();
     hoverBar2();
     clickBar();

@@ -16,6 +16,11 @@
 <body>
     <div id="loading">정보 들고오는 중</div>
     <div id="title"></div>
+    <div id="windowVideo">
+        <div id="videoTitle"></div>
+        <iframe width="1120" height="630" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <br /><button id="btnClose">Close</button>
+    </div>
     <div id="main">
         <div id="consoleTitle">
             ShowPoolWeb Youtube <br /> KnowledgeGraph
@@ -37,14 +42,15 @@
             </div>
             {% endif %}
         </div>
-        <div id="listVideoR"></div>
+        <div class="line">추천1</div>
+        <div id="listVideoR1"></div>
+        <div class="line">추천2</div>
+        <div id="listVideoR2"></div>
+        <div class="line">목록</div>
         <div id="listVideo"></div>
+        
     </div>
-    <div id="windowVideo">
-        <div id="videoTitle"></div>
-        <iframe width="1120" height="630" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <br /><button id="btnClose">Close</button>
-    </div>
+
     <div id="windowVideoBlock"></div>
     <div id="hoverMenu" style="position:absolute;"></div>
 </body>

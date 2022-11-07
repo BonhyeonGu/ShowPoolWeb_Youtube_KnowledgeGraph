@@ -1,5 +1,6 @@
 #--------------------------------------------------------------------------------------
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from bson.json_util import dumps
 #--------------------------------------------------------------------------------------
 from datetime import datetime
 from neo import Neo
@@ -105,6 +106,28 @@ def getKC_Videos():
 	params = request.get_json()
 	ret = neo.runQuery(2, params['comp'])
 	j = {"videoIds" : ret}
+	return jsonify(j)
+
+#--------------------------------------------------------------------------------------
+
+@app.route("/getVideoR1s", methods=['POST'])
+def getVideoR1s():
+	global doc
+	try:
+		ret = doc.find_one({"id": session["id"]}, {"_id" : 0, "recommID1" : 1})
+	except KeyError:
+		ret = []
+	j = {"videoRecomms" : ret["recommID1"]}
+	return jsonify(j)
+
+@app.route("/getVideoR2s", methods=['POST'])
+def getVideoR2s():
+	global doc
+	try:
+		ret = doc.find_one({"id": session["id"]}, {"_id" : 0, "recommID2" : 1})
+	except KeyError:
+		ret = []
+	j = {"videoRecomms" : ret["recommID2"]}
 	return jsonify(j)
 
 #--------------------------------------------------------------------------------------

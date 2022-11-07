@@ -1,6 +1,18 @@
 @charset "utf-8";
 
-#listVideo {
+#listVideo{
+    position: relative;
+    left: 300px;
+    width: 80%;
+}
+
+#listVideoR1 {
+    position: relative;
+    left: 300px;
+    width: 80%;
+}
+
+#listVideoR2 {
     position: relative;
     left: 300px;
     width: 80%;
