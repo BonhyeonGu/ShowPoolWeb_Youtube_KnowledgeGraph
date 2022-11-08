@@ -51,7 +51,7 @@
 .line {
     left: 300px;
     position: relative;
-    width: 1050px;
+    width: 1080px;
 	display:flex;
 	flex-basis:100%;
 	align-items:center;
