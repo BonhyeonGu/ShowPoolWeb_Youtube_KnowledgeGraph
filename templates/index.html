@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>test</title>
+	<title>Show Pool</title>
 	<script src ="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src ="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 
@@ -14,7 +14,10 @@
 </head>
 
 <body>
-    <div id="loading">정보 들고오는 중</div>
+    <div id="loading">정보 들고오는 중<br />
+    Neo4J와 Youtube에서 정보를 들고옵니다.<br />
+    약 1분정도 시간이 소요됩니다.
+    </div>
     <div id="title"></div>
     <div id="windowVideo">
         <div id="videoTitle"></div>
@@ -23,7 +26,7 @@
     </div>
     <div id="main">
         <div id="consoleTitle">
-            ShowPoolWeb Youtube <br /> KnowledgeGraph
+            ShowPoolWeb<br />Youtube<br />KnowledgeGraph
         </div>
         <div id="console">
             {% if user_id == 'ANNONYMOUS' %}

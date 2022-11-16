@@ -42,7 +42,7 @@ function makeBar(vid, segComs){
     let divHeight = 20;
     
     let divWidth = (divWidthAll / segComs.length).toFixed(2) - 2.2;
-    let code = '<br /><div style="text-align: center;">';
+    let code = '<div style="text-align: center;">';
     let idx = 0;
     for(let coms of segComs){   
         code += `<div class="bar" style="width:${divWidth}px; height:${divHeight}px;` +
@@ -61,7 +61,7 @@ function makevideoSet(vid, title, segComs){
     let code = `<div class="thumSet" data-vid="${vid}" data-title="${title}" style="float: left; margin: 20px; height: 180px; width: 320px; background-image: url(https://img.youtube.com/vi/${vid}/mqdefault.jpg);">`+
             `<div class="thumSetTarget" style="width: 320px; height: 10px"></div>`+
             `<div class="videoTitle">${titleDrop(title, 35)}</div>` +
-            `<div class="thumSetTarget" style="height: 100px"></div>`+
+            `<div class="thumSetTarget" style="height: 128px"></div>`+
             makeBar(vid, segComs) +
             '</div>'+
         '<div style="width:200px; position: relative; float: left;"></div>';
