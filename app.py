@@ -1,6 +1,5 @@
 #--------------------------------------------------------------------------------------
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
-from bson.json_util import dumps
 #--------------------------------------------------------------------------------------
 from datetime import datetime
 from neo import Neo
