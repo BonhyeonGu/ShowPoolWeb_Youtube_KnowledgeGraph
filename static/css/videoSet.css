@@ -19,15 +19,16 @@
 }
 
 #windowVideo {
+    display: none;
     position: fixed;
     z-index: 101;
-    
     height: 90%;
     left: 50%;
     transform: translateX(-50%);
 }
 
 #windowVideoBlock {
+    display: none;
     top: -100px;
     position: fixed;
     z-index: 100;
@@ -37,6 +38,8 @@
 }
 
 #btnClose {
+    display: none;
+    position: fixed;
     width: 90px;
     height: 40px;
     font-size: 25px;
