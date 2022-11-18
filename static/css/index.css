@@ -53,7 +53,7 @@
 .line {
     left: 300px;
     position: relative;
-    width: 1080px;
+    width: 70%;
 	display:flex;
 	flex-basis:100%;
 	align-items:center;
