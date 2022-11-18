@@ -60,7 +60,7 @@ function makeBar(vid, segComs){
 function makevideoSet(vid, title, segComs){
     let code = `<div class="thumSet" data-vid="${vid}" data-title="${title}" style="float: left; margin: 20px; height: 180px; width: 320px; background-image: url(https://img.youtube.com/vi/${vid}/mqdefault.jpg);">`+
             `<div class="thumSetTarget" style="width: 320px; height: 10px"></div>`+
-            `<div class="videoTitle">${titleDrop(title, 35)}</div>` +
+            `<div class="videoTitleSmall">${titleDrop(title, 35)}</div>` +
             `<div class="thumSetTarget" style="height: 128px"></div>`+
             makeBar(vid, segComs) +
             '</div>'+
@@ -175,6 +175,7 @@ function clickThum(){
         $("#windowVideo").children('#videoTitle').text(title);
         $("#windowVideoBlock").show();
         $("#windowVideo").show();
+        $("#btnClose").show();
     });
 }
 
@@ -236,8 +237,8 @@ $(document).keydown(function(event){
             let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
                 "&autoplay=1";
             $("#windowVideo").children('iframe').attr("src", src);
-            $("#windowVideo").hide()
-            $("#windowVideoBlock").hide()
+            $("#windowVideo").hide();
+            $("#windowVideoBlock").hide();
         }
     });
 });
@@ -246,7 +247,7 @@ $(document).ready(function(){
     id2title = new Map();
     id2autor = new Map();
     id2comp = new Map();
-
+    $("#btnClose").hide();
     $("#windowVideo").hide();
     $("#windowVideoBlock").hide();
     $("#hoverMenu").hide();
@@ -262,9 +263,10 @@ $(document).ready(function(){
         let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
             "&autoplay=1";
         $("#windowVideo").children('iframe').attr("src", src);
-        $("#windowVideo").hide()
-        $("#windowVideoBlock").hide()
+        $("#btnClose").hide();
+        $("#windowVideo").hide();
+        $("#windowVideoBlock").hide();
     });
 
-    $("#loading").hide()
+    $("#loading").hide();
 });

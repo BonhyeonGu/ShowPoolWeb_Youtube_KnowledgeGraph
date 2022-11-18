@@ -14,9 +14,9 @@
 </head>
 
 <body>
-    <div id="loading">정보 들고오는 중<br />
-    Neo4J와 Youtube에서 정보를 들고옵니다.<br />
-    약 1분정도 시간이 소요됩니다.
+    <div id="loading">
+        Getting information from YouTube and DB.<br />
+        It takes about a minute.
     </div>
     <div id="title"></div>
     <div id="windowVideo">
@@ -29,9 +29,16 @@
             <div id="consoleTitle">
                 Pool Youtube<br />KnowledgeGraph
             </div>
+            <div id="consoleEditor">
+                by Bonhyeon Gu, <br />
+                Muyeon Jo, <br />
+                Sungbeom Lee.
+            </div>
             {% if user_id == 'ANNONYMOUS' %}
             <div id="login" class="boxInput">
-                This login is for testing<br />recommended algorithms.<br />
+                This login is for testing<br />recommended algorithms.<br /><br />
+                id is (user01, user02, user03)<br />
+                pw is 1234
                 <form action="/backLogin" method ="post"><br/>
                     <input type="text" id="id" name="id" maxlength="8" placeholder="ID" /><br/>
 				    <input type="password" id="pw" name="pw" placeholder="PW" /><br/><br/>
@@ -40,7 +47,7 @@
             </div>
             {% else %}
             <div id="userInfo" class="boxInput">
-                Currently in user : {{user_id}} <br /><br/>
+                Currently in user<br />{{user_id}} <br /><br/>
                 <button id="btnLogout" >LOGOUT</button>
             </div>
             {% endif %}
