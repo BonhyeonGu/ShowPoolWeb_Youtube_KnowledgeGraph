@@ -179,6 +179,44 @@ function clickThum(){
     });
 }
 
+function clickThumBig(){
+    $(".thumSetTargetBig").on("click", function(){
+        let sel = $(this).parent();
+        let vid = $(sel).data('vid');
+        let title = $(sel).data('title');
+        let src = "http://www.youtube.com/embed/" + vid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
+        $.ajax({
+            url: "/getWho",
+            type: "POST",
+            async: false,
+            dataType: "json",
+            data: JSON.stringify({msg : "plz"}),
+            contentType: "application/json",
+            success: function(res){
+                if(res.id != 'ANONYMOUSE'){
+                    $.ajax({
+                        url: "/eventClick",
+                        type: "POST",
+                        async: false,
+                        dataType: "json",
+                        data: JSON.stringify({vid : vid, comps : id2comp.get(vid)}),
+                        contentType: "application/json",
+                        success: function(res){
+                            console.log("ok");
+                        }
+                    });
+                }
+            }
+        });
+
+        $("#windowVideo").children('iframe').attr("src", src);
+        $("#windowVideo").children('#videoTitle').text(title);
+        $("#windowVideoBlock").show();
+        $("#windowVideo").show();
+        $("#btnClose").show();
+    });
+}
+
 //-------------------------------------------------
 
 function clickBar(){
@@ -256,6 +294,7 @@ $(document).ready(function(){
     standby1();
     standby2();
     clickThum();
+    clickThumBig();
     hoverBar2();
     clickBar();
 
