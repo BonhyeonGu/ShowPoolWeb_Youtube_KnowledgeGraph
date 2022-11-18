@@ -61,7 +61,7 @@ function makevideoSet(vid, title, segComs){
     let code = `<div class="thumSet" data-vid="${vid}" data-title="${title}" style="float: left; margin: 20px; height: 180px; width: 320px; background-image: url(https://img.youtube.com/vi/${vid}/mqdefault.jpg);">`+
             `<div class="thumSetTarget" style="width: 320px; height: 10px"></div>`+
             `<div class="videoTitleSmall">${titleDrop(title, 35)}</div>` +
-            `<div class="thumSetTarget" style="height: 128px"></div>`+
+            `<div class="thumSetTargetBig" style="height: 128px"></div>`+
             makeBar(vid, segComs) +
             '</div>'+
         '<div style="width:200px; position: relative; float: left;"></div>';

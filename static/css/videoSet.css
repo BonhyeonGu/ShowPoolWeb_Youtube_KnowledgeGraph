@@ -18,6 +18,11 @@
     width: 80%;
 }
 
+.thumSetTargetBig:hover {
+    background-color: rgba(255, 255, 255, 0.201);
+}
+
+
 #windowVideo {
     display: none;
     position: fixed;
