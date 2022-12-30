@@ -1,3 +1,4 @@
+
 <div align="center">
 
 <h1>ShowPoolWeb_Youtube_KnowledgeGraph</h1>
@@ -32,5 +33,10 @@
 
 ## How to Run (Bare Metal)
 
-workspace 내부의 app.py로 flask run 명령어를 통하여 웹 서비스를 실행할 수 있습니다.  
+workspace 내부의 app.py로
+```bash
+flask run
+```
+을 통하여 웹 서비스를 실행할 수 있습니다.  
 http://127.0.0.1:5050 으로 접속 가능합니다.
+
