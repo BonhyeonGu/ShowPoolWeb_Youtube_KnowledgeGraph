@@ -141,50 +141,88 @@ function standby2(){
     });
 }
 
-function clickThum(){
-    $(".thumSetTarget").on("click", function(){
-        let sel = $(this).parent();
-        let vid = $(sel).data('vid');
-        let title = $(sel).data('title');
-        let src = "http://www.youtube.com/embed/" + vid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
-        $.ajax({
-            url: "/getWho",
-            type: "POST",
-            async: false,
-            dataType: "json",
-            data: JSON.stringify({msg : "plz"}),
-            contentType: "application/json",
-            success: function(res){
-                if(res.id != 'ANONYMOUSE'){
-                    $.ajax({
-                        url: "/eventClick",
-                        type: "POST",
-                        async: false,
-                        dataType: "json",
-                        data: JSON.stringify({vid : vid, comps : id2comp.get(vid)}),
-                        contentType: "application/json",
-                        success: function(res){
-                            console.log("ok");
-                        }
-                    });
-                }
-            }
-        });
+//-------------------------------------------------
 
-        $("#windowVideo").children('iframe').attr("src", src);
-        $("#windowVideo").children('#videoTitle').text(title);
-        $("#windowVideoBlock").show();
-        $("#windowVideo").show();
-        $("#btnClose").show();
-    });
+function drawGraph(){
+    var cy = cytoscape({
+        container: document.getElementById('cy'),
+      
+        boxSelectionEnabled: false,
+        autounselectify: true,
+      
+        style: cytoscape.stylesheet()
+          .selector('node')
+            .style({
+              'content': 'data(id)'
+            })
+          .selector('edge')
+            .style({
+              'curve-style': 'bezier',
+              'target-arrow-shape': 'triangle',
+              'width': 4,
+              'line-color': '#ddd',
+              'target-arrow-color': '#ddd'
+            })
+          .selector('.highlighted')
+            .style({
+              'background-color': '#61bffc',
+              'line-color': '#61bffc',
+              'target-arrow-color': '#61bffc',
+              'transition-property': 'background-color, line-color, target-arrow-color',
+              'transition-duration': '0.5s'
+            }),
+      
+        elements: {
+            nodes: [
+              { data: { id: 'a' } },
+              { data: { id: 'b' } },
+              { data: { id: 'c' } },
+              { data: { id: 'd' } },
+              { data: { id: 'e' } }
+            ],
+      
+            edges: [
+              { data: { id: 'a"e', weight: 1, source: 'a', target: 'e' } },
+              { data: { id: 'ab', weight: 3, source: 'a', target: 'b' } },
+              { data: { id: 'be', weight: 4, source: 'b', target: 'e' } },
+              { data: { id: 'bc', weight: 5, source: 'b', target: 'c' } },
+              { data: { id: 'ce', weight: 6, source: 'c', target: 'e' } },
+              { data: { id: 'cd', weight: 2, source: 'c', target: 'd' } },
+              { data: { id: 'de', weight: 7, source: 'd', target: 'e' } }
+            ]
+          },
+      
+        layout: {
+          name: 'breadthfirst',
+          directed: true,
+          roots: '#a',
+          padding: 10
+        }
+      });
+      
+      var bfs = cy.elements().bfs('#a', function(){}, true);
+      
+      var i = 0;
+      var highlightNextEle = function(){
+        if( i < bfs.path.length ){
+          bfs.path[i].addClass('highlighted');
+      
+          i++;
+          setTimeout(highlightNextEle, 1000);
+        }
+      };
+      
+      // kick off first highlight
+      highlightNextEle();
 }
 
-function clickThumBig(){
-    $(".thumSetTargetBig").on("click", function(){
+function clickThum(pos){
+    $(pos).on("click", function(){
         let sel = $(this).parent();
         let vid = $(sel).data('vid');
         let title = $(sel).data('title');
         let src = "http://www.youtube.com/embed/" + vid + "?enablejsapi=1&origin=http://example.com&autoplay=1&mute=1";
+        //클릭 정보 수집 start
         $.ajax({
             url: "/getWho",
             type: "POST",
@@ -208,6 +246,8 @@ function clickThumBig(){
                 }
             }
         });
+        drawGraph();
+        //클릭 정보 수집 end
 
         $("#windowVideo").children('iframe').attr("src", src);
         $("#windowVideo").children('#videoTitle').text(title);
@@ -293,8 +333,8 @@ $(document).ready(function(){
     standby();
     standby1();
     standby2();
-    clickThum();
-    clickThumBig();
+    clickThum(".thumSetTarget");
+    clickThum(".thumSetTargetBig");
     hoverBar2();
     clickBar();
 
