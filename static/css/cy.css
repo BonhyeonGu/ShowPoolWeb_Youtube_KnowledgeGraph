@@ -1,12 +1,15 @@
-body { 
-  font: 14px helvetica neue, helvetica, arial, sans-serif;
-}
-  
 #cy {
   height: 100%;
-  width: 100%;
+  width: 850px;
   position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 102;
+  left: 1110px;
+  top: 0; 
+}
+
+#btnGraphReset {
+  position: absolute;
+  left: 100px;
+  width: 90px;
+  height: 40px;
+  font-size: 12px;
 }

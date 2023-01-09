@@ -27,9 +27,6 @@
     display: none;
     position: fixed;
     z-index: 101;
-    height: 90%;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 #windowVideoBlock {

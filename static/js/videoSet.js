@@ -216,6 +216,12 @@ function drawGraph(){
       highlightNextEle();
 }
 
+function clickBtnGraphReset(){
+    $("#btnGraphReset").on("click", function(){
+        drawGraph();
+    });
+}
+
 function clickThum(pos){
     $(pos).on("click", function(){
         let sel = $(this).parent();
@@ -246,7 +252,6 @@ function clickThum(pos){
                 }
             }
         });
-        drawGraph();
         //클릭 정보 수집 end
 
         $("#windowVideo").children('iframe').attr("src", src);
@@ -254,6 +259,7 @@ function clickThum(pos){
         $("#windowVideoBlock").show();
         $("#windowVideo").show();
         $("#btnClose").show();
+        drawGraph();
     });
 }
 
@@ -337,6 +343,8 @@ $(document).ready(function(){
     clickThum(".thumSetTargetBig");
     hoverBar2();
     clickBar();
+
+    clickBtnGraphReset();
 
     $("#btnClose").on("click", function(){
         let src = "http://www.youtube.com/embed/?enablejsapi=1&origin=http://example.com"+
